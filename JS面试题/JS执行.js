@@ -85,23 +85,190 @@ let fn = function () {
 }
 fn.bind().bind(a)()
 
+// 缓存函数（备忘模式）
 function memorize(fn) {
   const cache = {}
-  return function (...args) {
+  function memorized(...args) {
     const key = JSON.stringify(args)
-    // console.log('cache',cache);
-    return cache[key] || (cache[key] = fn.apply(fn, args))
+    if (cache[key] !== undefined) {
+      return { result: cache[key], cache }
+    } else {
+      const result = fn.apply(fn, args)
+      cache[key] = result
+      return { result, cache }
+    }
   }
+  memorized.cache = cache // 将缓存对象作为属性添加到返回的函数上
+  return memorized
 }
 
 function add(a) {
-  console.log('a',a);
   return a + 1
 }
 
 const adder = memorize(add)
 
-adder(1) // 输出: 2    当前: cache: { '[1]': 2 }
-adder(1) // 输出: 2    当前: cache: { '[1]': 2 }
-adder(2) // 输出: 3    当前: cache: { '[1]': 2, '[2]': 3 }
-adder(3) // 输出：5
+console.log(adder(1)) // 输出: { result: 2, cache: { '[1]': 2 } }
+console.log(adder(1)) // 输出: { result: 2, cache: { '[1]': 2 } }
+console.log(adder(2)) // 输出: { result: 3, cache: { '[1]': 2, '[2]': 3 } }
+console.log(adder(3)) // 输出: { result: 4, cache: { '[1]': 2, '[2]': 3, '[3]': 4 } }
+
+// call的实现原理
+Function.prototype.myCall = function (context, ...args) {
+  if (typeof this !== "function") return
+  context = context || window
+  const fn = Symbol("fn")
+  context[fn] = this
+  const result = context[fn](...args)
+  delete context[fn]
+  return result
+}
+// 测试代码
+function greet(name) {
+  return `Hello, ${name}! I'm ${this.role}.`
+}
+const person = {
+  role: "developer",
+}
+const result = greet.myCall(person, "Alice")
+console.log(result) // 期望输出: "Hello, Alice! I'm developer."
+// apply的实现原理
+Function.prototype.myApply = function (context, args) {
+  if (typeof this !== "function") return
+  context = context || window
+  const fn = Symbol("fn")
+  context[fn] = this
+  const result = context[fn](...args)
+  delete context[fn]
+  return result
+}
+function greet(...args) {
+  return `Hello, ${args[0]}! I'm ${this.role}.`
+}
+const person1 = {
+  role: "developer",
+}
+const result1 = greet.myApply(person1, ["Alice"])
+console.log(result1) // 期望输出: "Hello, Alice! I'm developer."
+
+// bind 的实现原理
+
+Function.prototype.myBind = function (context, ...args1) {
+  if (typeof this !== "function") return
+  const fn = this
+  return function (...args2) {
+    const allArgs = [...args1, ...args2]
+    if (new.target) {
+      return new fn(...allArgs)
+    } else {
+      return fn.apply(context, allArgs)
+    }
+  }
+}
+function greet(greeting, punctuation) {
+  return `${greeting} ${this.name}${punctuation}`
+}
+
+const person2 = { name: "Alice" }
+
+const boundFunc = greet.myBind(person2, "Hello")
+console.log(boundFunc("!")) // 输出：'Hello Alice!'
+
+const newObj = new boundFunc("!!!")
+console.log(newObj) // 输出：{ name: 'Alice' }
+const newObj1 = new (greet.bind(person2, "Hello"))("111")
+console.log(newObj1)
+
+// 浅拷贝
+
+let aaa1 = 1
+let ccc = 3
+let bbb1 = aaa1
+aaa1 = ccc
+
+console.log("bbb1", bbb1)
+
+// 手写浅拷贝
+
+function shallowCopy(obj) {
+  if (!obj || typeof obj !== "object") return
+  const newObj = Array.isArray(obj) ? [] : {}
+  for (const key in obj) {
+    if (Object.hasOwnProperty.call(obj, key)) {
+      newObj[key] = object[key]
+    }
+  }
+  return newObj
+}
+
+// 手写深拷贝
+
+function deepCopy(obj) {
+  if (!obj || typeof obj !== "object") return
+  const newObj = Array.isArray(obj) ? [] : {}
+
+  for (const key in obj) {
+    if (Object.hasOwnProperty.call(obj, key)) {
+      const el = object[key]
+      newObj[key] = typeof el === "object" ? deepCopy(el) : el
+    }
+  }
+  return newObj
+}
+
+// 完美深拷贝
+
+function cloneForce(x) {
+  const uniqueList = []
+  let root = {}
+  const loopList = [
+    {
+      parent: root,
+      key: undefined,
+      data: x,
+    },
+  ]
+  const find = (arr, item) => {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].source === item) {
+        return arr[i]
+      }
+    }
+    return null
+  }
+  while (loopList.length) {
+    const node = loopList.pop()
+    const parent = node.parent
+    const key = node.key
+    const data = node.data
+    let res = parent
+    // 初始化赋值目标，key为undefined则拷贝到父元素，否则拷贝到子元素
+    if (typeof key !== "undefined") {
+      res = parent[key] = {}
+    }
+    let uniqueData = find(uniqueList, data)
+
+    if (uniqueData) {
+      parent[key] = uniqueData.target
+      continue
+    }
+    uniqueList.push({
+      source: data,
+      target: res,
+    })
+    for (let k in data) {
+      if (data.hasOwnProperty(k)) {
+        if (typeof data[k] === "object") {
+          loopList.push({
+            parent: res,
+            key: k,
+            data: data[k],
+          })
+        } else {
+          res[k] = data[k]
+        }
+      }
+    }
+  }
+  return root
+}

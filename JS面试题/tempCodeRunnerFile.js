@@ -1,20 +1,24 @@
 function memorize(fn) {
   const cache = {}
-  return function (...args) {
+  function foo(args) {
     const key = JSON.stringify(args)
-    // console.log('cache',cache);
-    return cache[key] || (cache[key] = fn.apply(fn, args))
+    let result = cache[key]
+    if (!result) {
+      cache[key] = args
+      result = fn(args)
+    }
+    return { cache, result }
   }
+  foo.cache = cache
+  return foo
 }
 
 function add(a) {
-  console.log('a',a);
   return a + 1
 }
 
-const adder = memorize(add)
-
-adder(1) // 输出: 2    当前: cache: { '[1]': 2 }
-adder(1) // 输出: 2    当前: cache: { '[1]': 2 }
-adder(2) // 输出: 3    当前: cache: { '[1]': 2, '[2]': 3 }
-adder(3) // 输出：5
+const added = memorize(add)
+console.log("", added(1))
+console.log("", added(2))
+console.log("", added(3))
+console.log("", added(4))
