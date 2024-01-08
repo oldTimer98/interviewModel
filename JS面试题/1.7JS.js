@@ -5,8 +5,9 @@ Function.prototype.myCall = function (ctx, ...args) {
   ctx = ctx || window
   const fn = Symbol()
   ctx[fn] = this
-  ctx[fn](...args)
+  const result = ctx[fn](...args)
   delete ctx[fn]
+  return result
 }
 Function.prototype.myApply = function (ctx, args) {
   if (typeof this !== "function") return
@@ -81,7 +82,7 @@ function myNew(ctx, ...args) {
   if (typeof ctx !== "function") return
   let obj = {}
   obj.prototype = Object.create(ctx.prototype)
-  const res = ctx.apply(this, args)
+  const res = ctx.apply(obj, args)
   if (res && (typeof res !== "object" || typeof res === "function")) return res
   return obj
 }
@@ -110,3 +111,42 @@ console.log("", added(1))
 console.log("", added(2))
 console.log("", added(3))
 console.log("", added(4))
+
+function debounce(fn, wait) {
+  let timer = null
+  return function (...args) {
+    let ctx = this
+    if (timer) {
+      clearTimeout(timer)
+      timer = null
+    }
+    timer = setTimeout(() => {
+      fn.apply(ctx, args)
+    }, wait)
+  }
+}
+
+function throttle(fn, wait) {
+  let timer = null
+  return function (...args) {
+    let ctx = this
+    if (!timer) {
+      timer = setTimeout(() => {
+        fn.apply(ctx, args)
+        timer = null
+      }, wait)
+    }
+  }
+}
+
+function throttle(fn, wait) {
+  let curTime = Date.now()
+  return function (...args) {
+    let ctx = this
+    const nowTime = Date.now()
+    if (nowTime - curTime >= wait) {
+      curTime = Date.now()
+      fn.apply(ctx, args)
+    }
+  }
+}

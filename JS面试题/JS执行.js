@@ -272,3 +272,71 @@ function cloneForce(x) {
   }
   return root
 }
+
+// 防抖的实现
+
+function debounce(fn, wait) {
+  let timer = null
+  return function (...args) {
+    let ctx = this
+    if (timer) {
+      clearTimeout(timer)
+      timer = null
+    }
+    timer = setTimeout(() => {
+      fn.apply(ctx, args)
+    }, wait)
+  }
+}
+
+// 测试用例
+function handleInput(text, text2) {
+  console.log("Input changed:", text, text2)
+}
+
+const debouncedHandleInput = debounce(handleInput, 300)
+
+// 模拟输入事件
+debouncedHandleInput("First input", "我是测试文本")
+debouncedHandleInput("Second input", "我是测试文本")
+debouncedHandleInput("third input", "我是测试文本")
+// 300 毫秒后只会输出 'Input changed: Second input'
+
+// 节流的实现
+
+function throttle(fn, wait) {
+  let timer = null
+  return function (...args) {
+    const ctx = this
+    if (!timer) {
+      timer = setTimeout(() => {
+        fn.apply(ctx, args)
+        timer = null
+      }, wait)
+    }
+  }
+}
+function throttle(fn, wait) {
+  let curTime = Date.now()
+  return function (...args) {
+    let ctx = this
+    let nowTime = Date.now()
+    // 如果两次时间间隔超过了指定时间，则执行函数。
+    if (nowTime - curTime >= wait) {
+      curTime = Date.now()
+      return fn.apply(ctx, args)
+    }
+  }
+}
+// 测试用例
+function handleScroll() {
+  console.log("Scrolled")
+}
+
+const throttledHandleScroll = throttle(handleScroll, 1000)
+
+// 模拟滚动事件
+// 在 1000 毫秒内多次触发滚动事件，但只会在每隔 1000 毫秒输出一次 'Scrolled'
+setInterval(() => {
+  throttledHandleScroll()
+}, 200)

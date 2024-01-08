@@ -1,24 +1,24 @@
-function memorize(fn) {
-  const cache = {}
-  function foo(args) {
-    const key = JSON.stringify(args)
-    let result = cache[key]
-    if (!result) {
-      cache[key] = args
-      result = fn(args)
+function throttle(fn, wait) {
+  let curTime = Date.now()
+  return function (...args) {
+    let ctx = this
+    let nowTime = Date.now()
+    // 如果两次时间间隔超过了指定时间，则执行函数。
+    if (nowTime - curTime >= wait) {
+      curTime = Date.now()
+      return fn.apply(ctx, args)
     }
-    return { cache, result }
   }
-  foo.cache = cache
-  return foo
+}
+// 测试用例
+function handleScroll() {
+  console.log("Scrolled")
 }
 
-function add(a) {
-  return a + 1
-}
+const throttledHandleScroll = throttle(handleScroll, 1000)
 
-const added = memorize(add)
-console.log("", added(1))
-console.log("", added(2))
-console.log("", added(3))
-console.log("", added(4))
+// 模拟滚动事件
+// 在 1000 毫秒内多次触发滚动事件，但只会在每隔 1000 毫秒输出一次 'Scrolled'
+setInterval(() => {
+  throttledHandleScroll()
+}, 200)
