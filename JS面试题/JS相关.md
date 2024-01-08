@@ -223,17 +223,45 @@ close阶段：处理close的回调
 
 ### 24、**事件冒泡和捕获的区别？默认是冒泡还是捕获？**
 
-事件流指的是，事件触发的顺序会按照先
+事件流指的是，事件触发的顺序会按照先捕获和冒泡的规则，也就是捕获阶段，目标阶段，冒泡阶段
 
-事件冒泡：
+事件冒泡：事件接受后，开始逐级向上传播到Dom的顶层节点的过程
 
-事件捕获：
+div > body > html >document >window
+
+事件捕获：document对象在接受到点击事件后，会沿着dom树向下传播，直到传播到事件的目标位置
+
+window > document > html > body > div
+
+默认是冒泡
+
+onclick 和attchevnet只能获取冒泡阶段
+
+addEventListener 的第三个参数如果是true的话，则表示是捕获阶段，默认是false，也就是冒泡阶段
+
+有些事件没有事件冒泡，如 blur 、focus、mouseenter、mouseleave
+
+#### 如何阻止事件冒泡呢
+
+1.可以使用e.stopProgation阻止事件冒泡 // 
+
+2.使用addEventListener 的第三个参数设置为true，也就是捕获阶段
+
+阻止默认行为
+
+addEventListener 的话只有一种 e.preventDefault
+
+如果是onclick 可以使用return false
 
 
+
+冒泡的应用也就是事件委托也叫事件代理
 
 ### 25、**什么是事件代理？**
 
+也就是通过事件捕获或者事件冒泡，把一系列内层元素的事件绑定到外层元素，作用是减少操作的Dom的次数，提高程序的性能并且在动态添加或删除列表项时也不需要重新绑定事件处理程序，这使得代码更加简洁、灵活且易于维护。
 
+比如动态创建子元素，给ul绑定事件，那每一个子元素也会有事件
 
 ### 26、**mouseover 和 mouseenter 的区别？**
 
@@ -243,17 +271,58 @@ close阶段：处理close的回调
 
 ### 27、**浏览器缓存策略**
 
+两种，强缓存和协商缓存
+
+强缓存：
+
+expires：http1.0
+
+cache-control:http1.1
+
+
+
+协商缓存：
+
+last-modified：http1.0
+
+Etag：http1.1
+
 
 
 ### 28、**浏览器内核是什么？包含什么？常见的有哪些？**
 
+浏览器内核是由js引擎和渲染引擎组成的
 
+ （1） IE 浏览器内核：Trident 内核，也是俗称的 IE 内核；
+ （2） Chrome 浏览器内核：统称为 Chromium 内核或 Chrome 内核，以前是 Webkit 内核，现在是 Blink内核；
+ （3） Firefox 浏览器内核：Gecko 内核，俗称 Firefox 内核；
+ （4） Safari 浏览器内核：Webkit 内核；
+ （5） Opera 浏览器内核：最初是自己的 Presto 内核，后来加入谷歌大军，从 Webkit 又到了 Blink 内核；
+ （6） 360浏览器、猎豹浏览器内核：IE + Chrome 双内核；
+ （7） 搜狗、遨游、QQ 浏览器内核：Trident（兼容模式）+ Webkit（高速模式）；
+ （8） 百度浏览器、世界之窗内核：IE 内核；
 
 
 
 ### 29、**打开了两个标签页是进程还是线程？**
 
+进程
 
+打开浏览器的一个页面，需要四个进程： gpu进程、渲染进程、网络进程、浏览器进程（插件进程）
+
+
+
+渲染进程中的线程
+
+gui线程
+
+js引擎线程
+
+计时器线程
+
+http线程
+
+事件触发线程
 
 ### 30、**浏览器从输入网址到页面加载的整个过程** 
 
