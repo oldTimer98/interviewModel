@@ -326,27 +326,64 @@ http线程
 
 ### 30、**浏览器从输入网址到页面加载的整个过程** 
 
+1、解析url：
 
+2、缓存判断：
+
+3、dns解析
+
+4、获取mac地址
+
+5、tcp三次握手
+
+6、https握手
+
+7、返回数据页面渲染
+
+8、tcp的四次挥手
 
 ### 31、**前端模块化机制？**
 
+五种：
 
+commonjs、amd、cmd、umd、esmodule、IIFE自执行函数
 
 ### 32、**ES Module 和 commonjs 的区别？**
 
+es6module是值的引用，commonjs是值的拷贝
 
+es6是编译的时候输出接口，commonjs是运行才加载
+
+es6是异步加载，commonjs是同步加载，因为commonjs是运行在node中，文件在本地，而es6是在浏览器运行，所以需要支持异步加载
+
+es6支持tree-shaking，commonjs不支持
 
 ### 33、**cookie、localStorage、sessionStorage、IndexedDB 的区别？**
 
-
+4k 5M 5M
 
 ### 34、**cookie 里面都包含什么属性？**
 
+1. Domain：设置主机名，设置浏览器允许哪些主机可以访问cookie；作用，减少域的限制并可以在子域里访问
 
+2. Path:指定访问cookie的必须存在请求url中的路径，除了使用域之外，还可以使用路径
+
+3. Expires/max-size：设置cookie的过期时间，如果没有设置，那么就是和session一起失效
+
+4. secure：https才可以访问
+
+5. httponly：使cookie只能通过服务端访问，并且客户端无法通过js去获取 很重要，可以防止xss攻击
+
+   
 
 ### 35、**Cookie能跨域吗？如何设置？**
 
+同一域名下，cookie是可以的共享的，而不同域名下，默认情况下是不共享的
 
+可以跨域，需要设置
+
+1. 响应头设置Access-Control-Allow-Credentials: true，表示允许发送cookie，与前端的withCredentials配合使用
+2. 响应头设置Access-Control-Allow-Origin：域名，请求域名，表示允许该域名下的请求访问资源
 
 ### 36、**对 CORS 的理解**
 
