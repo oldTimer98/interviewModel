@@ -76,3 +76,41 @@ const added = new memorize(add)
 console.log("added(", added(1))
 console.log("added(", added(2))
 console.log("added(", added(3))
+
+function throttle(fn, wait) {
+  let curTime = Date.now()
+  return function (...args) {
+    let ctx = this
+    let nowTime = Date.now()
+    if (nowTime - curTime >= wait) {
+      fn.apply(ctx, args)
+      curTime = Date.now()
+    }
+  }
+}
+function throttle(fn, wait) {
+  let timer
+  return function (...args) {
+    let ctx = this
+    if (!timer) {
+      timer = setTimeout(() => {
+        fn.apply(ctx, args)
+        timer = null
+      }, wait)
+    }
+  }
+}
+function debounce(fn, wait) {
+  let timer
+  return function (...args) {
+    let ctx = this
+    if (timer) {
+      clearTimeout(timer)
+      timer = null
+    }
+    timer = setTimeout(() => {
+      fn.apply(ctx, args)
+    }, wait)
+  }
+}
+

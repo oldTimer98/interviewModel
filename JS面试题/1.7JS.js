@@ -40,7 +40,7 @@ const boundFunc = greet.myBind(person2, "Hello")
 console.log(boundFunc("!")) // 输出：'Hello Alice!'
 
 const newObj = new boundFunc("!!!")
-console.log(newObj) // 输出：{ name: 'Alice' }
+console.log(newObj) //
 const newObj1 = new (greet.bind(person2, "Hello"))("111")
 console.log(newObj1)
 
