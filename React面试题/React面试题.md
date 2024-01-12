@@ -1,6 +1,6 @@
 
 
-![0598330567c146dd99ffb819efb8cc62~tplv-k3u1fbpfcp-zoom-1.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121644982.png)
+![1.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121644982.png)
 
 
 
@@ -14,7 +14,7 @@
 
 React并不是将click事件绑定到了div的真实DOM上，而是在document处监听了所有的事件，当事件发生并且[冒泡](https://so.csdn.net/so/search?q=冒泡&spm=1001.2101.3001.7020)到document处的时候，React将事件内容封装并交由真正的处理函数运行。这样的方式不仅仅减少了内存的消耗，还能在组件挂在销毁时统一订阅和移除事件。
 
-除此之外，冒泡到document上的事件也不是原生的浏览器事件，而是由react自己实现的合成事件（SyntheticEvent）。因此如果不想要是[事件冒泡](https://so.csdn.net/so/search?q=事件冒泡&spm=1001.2101.3001.7020)的话应该调用event.preventDefault()方法，而不是调用event.stopProppagation()方法。 ![1e969caa9fc647cf8985c4c841a01f60~tplv-k3u1fbpfcp-zoom-1.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121642462.png) JSX 上写的事件并没有绑定在对应的真实 DOM 上，而是通过事件代理的方式，将所有的事件都统一绑定在了 `document` 上。这样的方式不仅减少了内存消耗，还能在组件挂载销毁时统一订阅和移除事件。
+除此之外，冒泡到document上的事件也不是原生的浏览器事件，而是由react自己实现的合成事件（SyntheticEvent）。因此如果不想要是[事件冒泡](https://so.csdn.net/so/search?q=事件冒泡&spm=1001.2101.3001.7020)的话应该调用event.preventDefault()方法，而不是调用event.stopProppagation()方法。 ![2.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121642462.png) JSX 上写的事件并没有绑定在对应的真实 DOM 上，而是通过事件代理的方式，将所有的事件都统一绑定在了 `document` 上。这样的方式不仅减少了内存消耗，还能在组件挂载销毁时统一订阅和移除事件。
 
 另外冒泡到 `document` 上的事件也不是原生浏览器事件，而是 React 自己实现的合成事件（SyntheticEvent）。因此我们如果不想要事件冒泡的话，调用 `event.stopPropagation` 是无效的，而应该调用 `event.preventDefault`。
 
@@ -583,7 +583,7 @@ render() {
 </>
 ```
 
-不可以，render 阶段 DOM 还没有生成，无法获取 DOM。DOM 的获取需要在 pre-commit 阶段和 commit 阶段： ![98a52a67abd14d8cb2ba1fc00c0662a2~tplv-k3u1fbpfcp-zoom-1.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121641885.png)
+不可以，render 阶段 DOM 还没有生成，无法获取 DOM。DOM 的获取需要在 pre-commit 阶段和 commit 阶段： ![3.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121641885.png)
 
 #### 18. 对React的插槽(Portals)的理解，如何使用，有哪些使用场景
 
@@ -869,7 +869,7 @@ React.forwardRef 会创建一个React组件，这个组件能够将其接受的 
 
 #### 1. React setState 调用的原理
 
-![1e15b888f3bd4a1db8b72259331a4747~tplv-k3u1fbpfcp-zoom-1.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121639227.png)
+![4.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121639227.png)
 
 具体的执行过程如下（源码级解析)：
 
@@ -1200,7 +1200,7 @@ React 通常将组件生命周期分为三个阶段：
 - 更新过程（Update），组件状态发生变化，重新更新渲染的过程；
 - 卸载过程（Unmount），组件从DOM树中被移除的过程；
 
-![1570030fdd4a49f2ad8cfd01a24f80d7~tplv-k3u1fbpfcp-zoom-1.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121642769.png)
+![5.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121642769.png)
 
 1）组件挂载阶段
 
@@ -1430,7 +1430,7 @@ componentDidCatch(error, info)，此生命周期在后代组件抛出错误后�
 - error：抛出的错误。
 - info：带有 componentStack key 的对象，其中包含有关组件引发错误的栈信息
 
-React常见的生命周期如下： ![18842f9ec3674acdbdd7ff35f9683200~tplv-k3u1fbpfcp-zoom-1.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121642849.png) **React常见生命周期的过程大致如下：**
+React常见的生命周期如下： ![6.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121642849.png) **React常见生命周期的过程大致如下：**
 
 - 挂载阶段，首先执行constructor构造方法，来创建组件
 - 创建完成之后，就会执行render方法，该方法会返回需要渲染的内容
@@ -1575,7 +1575,7 @@ const o2 = JSON.parse(JSON.stringify(this.state.obj))
 
 #### 5. state 和 props 触发更新的生命周期分别有什么区别？
 
-**state 更新流程：** ![1451ff964c89442c9384478e494ce283~tplv-k3u1fbpfcp-zoom-1.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121642537.png) 这个过程当中涉及的函数：
+**state 更新流程：** ![7.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121642537.png) 这个过程当中涉及的函数：
 
 1. shouldComponentUpdate: 当组件的 state 或 props 发生改变时，都会首先触发这个生命周期函数。它会接收两个参数：nextProps, nextState——它们分别代表传入的新 props 和新的 state 值。拿到这两个值之后，我们就可以通过一些对比逻辑来决定是否有 re-render（重渲染）的必要了。如果该函数的返回值为 false，则生命周期终止，反之继续；
 
@@ -1586,7 +1586,7 @@ const o2 = JSON.parse(JSON.stringify(this.state.obj))
 
 ****
 
-**props 更新流程：** ![774a110865454a7b8cdc5a01562b9d0c~tplv-k3u1fbpfcp-zoom-1.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121642079.png) 相对于 state 更新，props 更新后唯一的区别是增加了对 componentWillReceiveProps 的调用。关于 componentWillReceiveProps，需要知道这些事情：
+**props 更新流程：** ![8.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121642079.png) 相对于 state 更新，props 更新后唯一的区别是增加了对 componentWillReceiveProps 的调用。关于 componentWillReceiveProps，需要知道这些事情：
 
 - componentWillReceiveProps：它在Component接受到新的 props 时被触发。componentWillReceiveProps 会接收一个名为 nextProps 的参数（对应新的 props 值）。**该生命周期是 React16 废弃掉的三个生命周期之一**。在它被废弃前，可以用它来比较 this.props 和 nextProps 来重新setState。在 React16 中，用一个类似的新生命周期 getDerivedStateFromProps 来代替它。
 
@@ -1612,7 +1612,7 @@ const o2 = JSON.parse(JSON.stringify(this.state.obj))
 
 #### 7. React 16中新生命周期有哪些
 
-关于 React16 开始应用的新生命周期： ![f2f59925a79e470eb730e605854e81b8~tplv-k3u1fbpfcp-zoom-1.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121642438.png) 可以看出，React16 自上而下地对生命周期做了另一种维度的解读：
+关于 React16 开始应用的新生命周期： ![9.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121642438.png) 可以看出，React16 自上而下地对生命周期做了另一种维度的解读：
 
 - **Render 阶段**：用于计算一些必要的状态信息。这个阶段可能会被 React 暂停，这一点和 React16 引入的 Fiber 架构（我们后面会重点讲解）是有关的；
 - **Pre-commit阶段**：所谓“commit”，这里指的是“更新真正的 DOM 节点”这个动作。所谓 Pre-commit，就是说我在这个阶段其实还并没有去更新真实的 DOM，不过 DOM 信息已经是可以读取的了；
@@ -2461,7 +2461,7 @@ const takeLatest = (pattern, saga, ...args) => fork(function*() {
 
   ```react
   o 维护应用状态并支持访问状态(getState());
-  o 支持监听action的分发，更新状态(dispatch(action)); 
+  o 支持监听action的分发，更新状态(dispatch(action));
   o 支持订阅store的变更(subscribe(listener));
 
 - 异步流∶ 由于Redux所有对store状态的变更，都应该通过action触发，异步任务（通常都是业务或获取数据任务）也不例外，而为了不将业务或数据相关的任务混入React组件中，就需要使用其他框架配合管理异步任务流程，如redux-thunk，redux-saga等;
@@ -2540,7 +2540,7 @@ class DemoClass extends React.Component {
       text: newText
     });
   };
- 
+
   render() {
     return (
       <div className="demoClass">
@@ -2550,7 +2550,7 @@ class DemoClass extends React.Component {
     );
   }
 }
- 
+
 ```
 
 可以看出，React 类组件内部预置了相当多的“现成的东西”等着我们去调度/定制，state 和生命周期就是这些“现成东西”中的典型。要想得到这些东西，难度也不大，只需要继承一个 React.Component 即可。
@@ -2581,7 +2581,7 @@ function DemoFunction(props) {
 
 除此之外，还有一些其他的不同。通过上面的区别，我们不能说谁好谁坏，它们各有自己的优势。在 React-Hooks 出现之前，**类组件的能力边界明显强于函数组件。**
 
-实际上，类组件和函数组件之间，是面向对象和函数式编程这两套不同的设计思想之间的差异。而函数组件更加契合 React 框架的设计理念： ![84fdd6a1619e497c9c0096a960ba4629~tplv-k3u1fbpfcp-zoom-1.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121700456.png) React 组件本身的定位就是函数，一个输入数据、输出 UI 的函数。作为开发者，我们编写的是声明式的代码，而 React 框架的主要工作，就是及时地把声明式的代码转换为命令式的 DOM 操作，把数据层面的描述映射到用户可见的 UI 变化中去。这就意味着从原则上来讲，React 的数据应该总是紧紧地和渲染绑定在一起的，而类组件做不到这一点。**函数组件就真正地将数据和渲染绑定到了一起。函数组件是一个更加匹配其设计理念、也更有利于逻辑拆分与重用的组件表达形式。**
+实际上，类组件和函数组件之间，是面向对象和函数式编程这两套不同的设计思想之间的差异。而函数组件更加契合 React 框架的设计理念： ![10.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121700456.png) React 组件本身的定位就是函数，一个输入数据、输出 UI 的函数。作为开发者，我们编写的是声明式的代码，而 React 框架的主要工作，就是及时地把声明式的代码转换为命令式的 DOM 操作，把数据层面的描述映射到用户可见的 UI 变化中去。这就意味着从原则上来讲，React 的数据应该总是紧紧地和渲染绑定在一起的，而类组件做不到这一点。**函数组件就真正地将数据和渲染绑定到了一起。函数组件是一个更加匹配其设计理念、也更有利于逻辑拆分与重用的组件表达形式。**
 
 为了能让开发者更好的的去编写函数式组件。于是，React-Hooks 便应运而生。
 
@@ -2636,7 +2636,7 @@ console.log(name);	// "xiaoxin"
 // 第一次使用
 const { state, setState } = useState(false);
 // 第二次使用
-const { state: counter, setState: setCounter } = useState(0) 
+const { state: counter, setState: setCounter } = useState(0)
 ```
 
 这里可以看到，返回对象的使用方式还是挺麻烦的，更何况实际项目中会使用的更频繁。 **总结：\**useState 返回的是 array 而不是 object 的原因就是为了\**降低使用的复杂度**，返回数组的话可以直接根据顺序解构，而返回对象的话要想使用多次就需要定义别名了。
@@ -2730,7 +2730,7 @@ return (
     </div>
   )
 }
- 
+
 class Indicatorfilter extends React.Component<any,any>{
   constructor(props:any){
       super(props)
@@ -2739,7 +2739,7 @@ class Indicatorfilter extends React.Component<any,any>{
       }
       this.test = this.test.bind(this)
   }
- 
+
   test(){
       // class采用同样的方式是没有问题的
       this.state.nums.push(1)
@@ -2747,7 +2747,7 @@ class Indicatorfilter extends React.Component<any,any>{
           nums: this.state.nums
       })
   }
- 
+
   render(){
       let {nums} = this.state
       return(
@@ -2759,7 +2759,7 @@ class Indicatorfilter extends React.Component<any,any>{
                       ))}
                   </div>
           </div>
- 
+
       )
   }
 }
@@ -2773,17 +2773,17 @@ TableDeail是一个公共组件，在调用它的父组件里面，我们通过s
 const TableDeail = ({
     columns,
 }:TableData) => {
-    const [tabColumn, setTabColumn] = useState(columns) 
+    const [tabColumn, setTabColumn] = useState(columns)
 }
- 
+
 // 正确的做法是通过useEffect改变这个值
 const TableDeail = ({
     columns,
 }:TableData) => {
-    const [tabColumn, setTabColumn] = useState(columns) 
+    const [tabColumn, setTabColumn] = useState(columns)
     useEffect(() =>{setTabColumn(columns)},[columns])
 }
- 
+
 ```
 
 **（4）善用useCallback**
@@ -2841,12 +2841,12 @@ const Button = React.memo((props) => {  // 具体的组件});
 useEffect(()=>{
   // 需要在 componentDidMount 执行的内容
 }, [])
-useEffect(() => { 
+useEffect(() => {
   // 在 componentDidMount，以及 count 更改时 componentDidUpdate 执行的内容
-  document.title = `You clicked ${count} times`; 
+  document.title = `You clicked ${count} times`;
   return () => {
     // 需要在 count 更改时 componentDidUpdate（先于 document.title = ... 执行，遵守先清理后更新）
-    // 以及 componentWillUnmount 执行的内容       
+    // 以及 componentWillUnmount 执行的内容
   } // 当函数中 Cleanup 函数会按照在代码中定义的顺序先后执行，与函数本身的特性无关
 }, [count]); // 仅在 count 更改时更新
 ```
@@ -2860,7 +2860,7 @@ useEffect(() => {
 useEffect(()=>{
   // 需要在 componentDidMount 执行的内容
   return function cleanup() {
-    // 需要在 componentWillUnmount 执行的内容      
+    // 需要在 componentWillUnmount 执行的内容
   }
 }, [])
 ```
@@ -2902,13 +2902,13 @@ Virtual DOM的更新DOM的准备工作耗费更多的时间，也就是JS层面�
 
 #### 2. React diff 算法的原理是什么？
 
-实际上，diff 算法探讨的就是虚拟 DOM 树发生变化后，生成 DOM 树更新补丁的方式。它通过对比新旧两株虚拟 DOM 树的变更差异，将更新补丁作用于真实 DOM，以最小成本完成视图更新。 ![e44d4ebb48a74ffda63754428c9d5273~tplv-k3u1fbpfcp-zoom-1.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121654019.jpeg) 具体的流程如下：
+实际上，diff 算法探讨的就是虚拟 DOM 树发生变化后，生成 DOM 树更新补丁的方式。它通过对比新旧两株虚拟 DOM 树的变更差异，将更新补丁作用于真实 DOM，以最小成本完成视图更新。 ![11.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121654019.jpeg) 具体的流程如下：
 
 - 真实的 DOM 首先会映射为虚拟 DOM；
 - 当虚拟 DOM 发生变化后，就会根据差距计算生成 patch，这个 patch 是一个结构化的数据，内容包含了增加、更新、移除等；
 - 根据 patch 去更新真实的 DOM，反馈到用户的界面上。
 
-![246e03a02e3e48ff941f921843bd8676~tplv-k3u1fbpfcp-zoom-1.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121649659.jpeg) 一个简单的例子：
+![12.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121649659.jpeg) 一个简单的例子：
 
 ```react
 import React from 'react'
@@ -3729,19 +3729,19 @@ JavaScript中的map不会对为null或者undefined的数据进行处理，而Rea
 
 - 客户端数据请求
 
-![4df605c1333247919058d218a38779f0~tplv-k3u1fbpfcp-zoom-1.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121652821.jpeg)
+![13.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121652821.jpeg)
 
 - 服务端数据请求
 
-![1d7c77623c784e6db840253132df5a35~tplv-k3u1fbpfcp-zoom-1.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121650092.jpeg) **2）html渲染** 服务端渲染是先向后端服务器请求数据，然后生成完整首屏 html返回给浏览器；而客户端渲染是等js代码下载、加载、解析完成后再请求数据渲染，等待的过程页面是什么都没有的，就是用户看到的白屏。就是服务端渲染不需要等待js代码下载完成并请求数据，就可以返回一个已有完整数据的首屏页面。
+![14.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121650092.jpeg) **2）html渲染** 服务端渲染是先向后端服务器请求数据，然后生成完整首屏 html返回给浏览器；而客户端渲染是等js代码下载、加载、解析完成后再请求数据渲染，等待的过程页面是什么都没有的，就是用户看到的白屏。就是服务端渲染不需要等待js代码下载完成并请求数据，就可以返回一个已有完整数据的首屏页面。
 
 - 非ssr html渲染
 
-![f2493e474a224b51b0ae7b86756c11af~tplv-k3u1fbpfcp-zoom-1.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121649185.jpeg)
+![15.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121649185.jpeg)
 
 - ssr html渲染
 
-![9d8f003d0d274b3c9da0cc4741b0c364~tplv-k3u1fbpfcp-zoom-1.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121650586.jpeg)
+![16.image](https://gitee.com/nest-of-old-time/picture/raw/master/typora/202401121650586.jpeg)
 
 #### 20. 为什么 React 要用 JSX？
 
@@ -3839,3 +3839,49 @@ export default withWindowWidth(MyComponent);
    class MyTestableClass {
 }
 ```
+
+#### 23.react为什么需要合成事件
+
+
+
+
+
+#### 24.react-redux 中 connect 函数的实现原理是什么
+
+react-redux 中的 connect 函数接近观察者模式，它利用 React 的上下文机制，直接订阅了 Redux store 的状态变化来实现组件的状态刚更新。
+connect 函数的实现原理可以概括为：
+
+创建一个容器组件，用于与 Redux store 进行交互、订阅状态变化和分发操作。
+
+- 在容器组件内部，使用 `mapStateToProps` 将 Redux store 中的状态映射到组件的 props 上。
+- 在容器组件内部，使用 `mapDispatchToProps` 将 Redux 中的操作映射到组件的 props 上。
+- 订阅 Redux store 的状态变化，以便在状态变化时重新渲染容器组件。
+- 将经过处理后的状态和操作传递给被包装的 React 组件，以供其使用。
+
+这个实现原理是一个高度简化的描述，react-redux 内部的实际实现更为复杂，因为它需要处理许多边缘情况和性能优化，以确保 React 应用的状态管理能够高效运行。
+
+#### 25.useEffect、useLayoutEffect、useInsertionEffect 之间的区别
+
+
+
+#### 26.为什么顺序调用对 React Hooks 很重要？
+
+
+
+
+
+#### 27.React 元素中 $$typeof 的作用
+
+
+
+
+
+#### 28.详细说说 react 生命周期
+
+
+
+#### 29.React如何拆分组件？原则是什么？
+
+
+
+#### 30.在 react 中我们为什么不能直接更新状态
