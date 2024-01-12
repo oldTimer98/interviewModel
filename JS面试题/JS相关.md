@@ -5,7 +5,7 @@ javascript 对象里有一个属性叫 prototype，也称作原型，它指向�
 
 目的节省内存----可以继承、共享属性和方法
 
-### 2、map 和 Object 的区别 
+### 2、map 和 Object 的区别
 
 1.键的类型 2. 键值对的顺序 3.大小的获取 4.原型链 5.迭代器：
 
@@ -84,7 +84,7 @@ this是一个关键字，它指向的是它调用的对象
 
 ### 15、操作数组元素的方法有哪些
 
-```
+```js
 1。Object.prototype.toString.call(obj).slice(8,-1) ---'Array'
 2.Array.isArray()
 3.obj.__proto__===Array.prototype
@@ -239,7 +239,7 @@ addEventListener 的第三个参数如果是true的话，则表示是捕获阶�
 
 #### 如何阻止事件冒泡呢
 
-1.可以使用e.stopProgation阻止事件冒泡 // 
+1.可以使用e.stopProgation阻止事件冒泡 //
 
 2.使用addEventListener 的第三个参数设置为true，也就是捕获阶段
 
@@ -320,7 +320,7 @@ http线程
 
 事件触发线程
 
-### 30、**浏览器从输入网址到页面加载的整个过程** 
+### 30、**浏览器从输入网址到页面加载的整个过程**
 
 1、解析url：对url进行分析，分析传输协议和路径地址，如果协议和主机名不合法，则直接交给搜索引擎，如果没有问题，则会检查url的非法字符，如果有则进行转义
 
@@ -398,7 +398,7 @@ esmodule的数据是同步的
 
 5. httponly：使cookie只能通过服务端访问，并且客户端无法通过js去获取 很重要，可以防止xss攻击
 
-   
+
 
 ### 35、**Cookie能跨域吗？如何设置？**
 
@@ -451,7 +451,7 @@ esmodule的数据是同步的
 
 预检请求使用的方法是Options，这个请求就是来询问服务器，它的头信息里有一个origin字段，表示来自哪个源，除此之外，来包括
 
-'Access-Control-Allow-Origin' 
+'Access-Control-Allow-Origin'
 
 **Access-Control-Request-Method**：用来列出浏览器的CORS请求会用到哪些HTTP方法。
 
@@ -518,7 +518,7 @@ CORS中Cookie相关问题：
 
 ​		对称加密的方法是，双方使用同一个秘钥对数据进行加密和解密。但是对称加密的存在一个问题，就是如何保证秘钥传输的安全性，因为秘钥还是会通过网络传输的，一旦秘钥被其他人获取到，那么整个加密过程就毫无作用了。 这就要用到非对称加密的方法。
 
-​	散列函数	
+​	散列函数
 
 ​		常用的散列函数有md5、SHA1,SHA256,他是单向不可逆的，对输入的数据非常敏感，输出的长度是固定的，任何数据的修改都会改变散列函数的结果，可以用于防止信息篡改并验证数据的完整性。
 
@@ -543,6 +543,64 @@ beforeunload
 unload
 
 ### 40、**如何解决跨域问题？**
+
+1、CORS跨域
+
+​	ACCESS-CONTROL-ALLOW-CREDITALS:TURE
+
+​	ACCESS-CONTROL-ALLOW-ORIGIN:非*
+
+2、Jsonp
+
+​	只支持get请求，就是服务端把数据返回到回调函数中,不安全，会遭受xss攻击
+
+​	2种实现方法：
+
+​			1.使用动态script
+
+​			2.使用axios的.jsonp
+
+```js			
+this.$http = axios;
+this.$http.jsonp('http://www.domain2.com:8080/login', {
+    params: {},
+    jsonp: 'handleCallback'
+}).then((res) => {
+    console.log(res); 
+})
+```
+
+3、postMessage
+
+- 页面和其打开的新窗口的数据传递	
+
+- 多窗口之间消息传递
+
+- 页面与嵌套的iframe消息传递
+
+- 上面三个场景的跨域数据传递
+
+  postMessage(data,origin),window,addEventListener("message",()=>{})
+
+4、nginx反向代理
+
+​	用代理服务器做跳板机，实现跨域请求，并且还可以修改domain的信息，方便携带cookie
+
+5、node中间件代理跨域
+
+​	跟ngnix实现的原理一样，都是利用代理服务器去做跳板机
+
+6、document.domain+iframe
+
+​	只适用于主域相同，子域不同，实现原理：两个页面都通过js强制设置document.domain为基础主域，就实现了同域。
+
+7、location.hash+iframe
+
+8、window.name+ iframe 
+
+​	name值在不同的页面（甚至不同域名）加载后依旧存在，并且可以支持非常长的 name 值（2MB）。
+
+9、webscoket**协议跨域**
 
 
 
@@ -614,11 +672,11 @@ text/xml
 
 ### 44、**HTTP 2.0 有哪些改进？**5种
 
-​	1.二进制协议 
+​	1.二进制协议
 
 ​			指的是报文的头信息，帧的概念是实现多路复用的基础
 
-​	2.多路复用 
+​	2.多路复用
 
 ​			服务器和客户端可以同时发送多个请求，而不是按照以前一一发送，这样就避免了队头阻塞的问题
 
