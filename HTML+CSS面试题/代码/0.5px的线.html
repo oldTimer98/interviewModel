@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      /* overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      overflow: hidden;
+      text-align: ellipsis;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3; */
+      padding: 0;
+      margin: 0;
+    }
+
+    .box1 {
+      height: 1300px;
+      width: 100%;
+      background-color: red;
+    }
+
+    .box2 {
+      height: 200px;
+      width: 100%;
+      background-color: green;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box1"></div>
+  <div class="box2"></div>
+</body>
+<script>
+  const box1 = document.querySelector(".box1")
+  const box2 = document.querySelector(".box2")
+
+  addEventListener('scroll', () => {
+    const innerHeight = window.innerHeight
+    const scrollTop = document.body.scrollTop || document.documentElement.scrollTop
+    const box2Height = box2.offsetTop
+    console.log('', innerHeight, scrollTop, box2Height);
+  })
+</script>
+
+</html>
