@@ -6,6 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
+<!--
+  三栏布局的实现
+      1、利用浮动，左设置左浮动，右设置右浮动，中间一栏放在最后并设置margin值
+      2、利用绝对定位，左固定，中间设置margin，右设置right：0
+      3、flex布局，左右两边固定，中间设置flex：1
+      4、圣杯布局：利用浮动和margin负值laugh解决，三列均设置向左浮动，中间一列放在最前面，宽度设置为父级元素的宽度，因此后面两列都被挤到了下一行，通过设置 margin 负值将其移动到上一行，再利用相对定位，定位到两边
+      5、双飞翼布局：双飞翼布局相对于圣杯布局来说，左右位置的保留是通过中间列的 margin 值来实现的，而不是通过父元素的 padding 来实现的。本质上来说，也是通过浮动和外边距负值来实现的。
+-->
 
 <body>
   <div class="foo">

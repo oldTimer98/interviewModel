@@ -512,19 +512,62 @@ display:-webkit-box;         // 作为弹性伸缩盒子模型显示。
 
 总结：
 
-> /* 居中元素定宽高 */
+> /* 居中元素定宽高 
 
-> /* 第一种 position:absolute  margin负值*/
+> /* 第一种 position:absolute  margin负值为元素的一半*/
+
+```css
+设置position:absolute; top:50%;left:50%; margin-left:width/2,margin-top:height/2
+.element {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px; /* 定宽 */
+  height: 200px; /* 定高 */
+  margin-top: -100px; /* 高度的一半 */
+  margin-left: -100px; /* 宽度的一半 */
+}
+```
 
 > /* 第二种 absolute 和 margin:auto*/
 
+```css
+.element {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 200px; /* 定宽 */
+  height: 200px; /* 定高 */
+}
+```
+
 > /* 第三种 absolute 和 calc */
+
+```css
+.element {
+  position: absolute;
+  top: calc(50% - 100px); /* 50%减去高度的一半 */
+  left: calc(50% - 100px); /* 50%减去宽度的一半 */
+  width: 200px; /* 定宽 */
+  height: 200px; /* 定高 */
+}
+```
 
 > /* 居中元素不定宽高 */
 
 > /* 第一种 absolute 和 transform:translate */
 
-> /* 利用line-height */
+```css
+.element {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+```
 
 > /* flex布局 */
 
@@ -692,7 +735,7 @@ display:-webkit-box;         // 作为弹性伸缩盒子模型显示。
 - **解决高度塌陷的问题****：在对子元素设置浮动后，父元素会发生高度塌陷，也就是父元素的高度变为0。解决这个问题，只需要把父元素变成一个BFC。常用的办法是给父元素设置** **overflow:hidden****。**
 - **创建自适应两栏布局****：可以用来创建自适应两栏布局：左边的宽度固定，右边的宽度自适应。**
 
-```plain
+```css
 .left{
      width: 100px;
      height: 200px;

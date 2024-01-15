@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .v1 {
+      width: 10%;
+      height: 10vw;
+      background-color: tomato;
+    }
+
+    .v2 {
+      width: 20%;
+      height: 0;
+      padding-top: 20%;
+      background-color: orange;
+    }
+
+    .v3 {
+      width: 30%;
+      overflow: hidden;
+      background: yellow;
+    }
+
+    .v3::after {
+      content: '';
+      display: block;
+      margin-top: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="v1"></div>
+  <div class="v2"></div>
+  <div class="v3"></div>
+</body>
+
+</html>
