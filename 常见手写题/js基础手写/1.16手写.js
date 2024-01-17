@@ -3,24 +3,23 @@ class MyPromise {
     this.status = "pending"
     this.value = undefined
     this.reason = undefined
-    this.onResolvedCallback = []
-    this.onRejectedCallback = []
-
+    this.onResolveCallback = []
+    this.onRejectCallback = []
     const resolve = value => {
       if (value instanceof MyPromise) {
-        return value.then(resolve, reject)
+        return this.then(resolve, reject)
       }
       if (this.status === "pending") {
         this.status = "resolved"
         this.value = value
-        this.onResolvedCallback.forEach(fn => fn())
+        this.onResolveCallback.forEach(fn => fn())
       }
     }
     const reject = reason => {
       if (this.status === "pending") {
         this.status = "rejected"
         this.reason = reason
-        this.onRejectedCallback.forEach(fn => fn())
+        this.onRejectCallback.forEach(fn => fn())
       }
     }
     try {
@@ -37,7 +36,7 @@ class MyPromise {
         : reason => {
             throw reason
           }
-    const promise2 = new MyPromise((resolve, reject) => {
+    const promise2 = new Promise((resolve, reject) => {
       if (this.status === "resolved") {
         try {
           const x = onResolved(this.value)
@@ -45,7 +44,8 @@ class MyPromise {
         } catch (error) {
           reject(error)
         }
-      } else if (this.status === "rejected") {
+      }
+      if (this.status === "rejected") {
         try {
           const x = onRejected(this.reason)
           resolve(x)
@@ -53,8 +53,9 @@ class MyPromise {
           reject(error)
         }
       }
+
       if (this.status === "pending") {
-        this.onResolvedCallback.push(() => {
+        this.onResolveCallback.push(() => {
           try {
             const x = onResolved(this.value)
             resolve(x)
@@ -62,7 +63,7 @@ class MyPromise {
             reject(error)
           }
         })
-        this.onRejectedCallback.push(() => {
+        this.onRejectCallback.push(() => {
           try {
             const x = onRejected(this.reason)
             resolve(x)
@@ -71,90 +72,30 @@ class MyPromise {
           }
         })
       } else {
-        this.onResolvedCallback = []
-        this.onRejectedCallback = []
+        this.onResolveCallback = []
+        this.onRejectCallback = []
       }
     })
+
     return promise2
   }
-  catch(callback) {
-    return this.then(null, callback)
-  }
+
   resolve(value) {
     return new MyPromise((resolve, reject) => {
       resolve(value)
     })
   }
+
   reject(reason) {
     return new MyPromise((resolve, reject) => {
       reject(reason)
     })
   }
-  race(promises) {
-    return new MyPromise((resolve, reject) => {
-      promises.forEach(promise => {
-        MyPromise.resolve(promise)
-          .then(res => {
-            resolve(res)
-          })
-          .catch(rej => {
-            reject(rej)
-          })
-      })
-    })
+
+  catch(callback) {
+    return this.then(null, callback)
   }
-  allsettled(promises) {
-    if (!Array.isArray(promises)) {
-      throw new TypeError(`argument must be a array`)
-    }
-    return new MyPromise((resolve, reject) => {
-      const result = []
-      promises.forEach((promise, index) => {
-        Promise.resolve(promise)
-          .then(
-            res => {
-              result[index] = {
-                status: "resolved",
-                value: res,
-              }
-            },
-            rej => {
-              result[index] = {
-                status: "rejected",
-                reason: rej,
-              }
-            }
-          )
-          .finally(() => {
-            if (result.length === promises.length) {
-              resolve(result)
-            }
-          })
-      })
-    })
-  }
-  all(promises) {
-    if (!Array.isArray(promises)) {
-      throw new TypeError(`argument must be a array`)
-    }
-    return new MyPromise((resolve, reject) => {
-      const result = []
-      promises.forEach((promise, index) => {
-        Promise.resolve(promise)
-          .then(res => {
-            result[index] = res
-          })
-          .catch(rej => {
-            reject(rej)
-          })
-          .finally(() => {
-            if (result.length === promises.length) {
-              resolve(result)
-            }
-          })
-      })
-    })
-  }
+
   finally(callback) {
     return this.then(
       value => {
@@ -166,6 +107,73 @@ class MyPromise {
         })
       }
     )
+  }
+
+  all(promises) {
+    if (!Array.isArray(promises)) {
+      throw new TypeError("promises must be an array")
+    }
+    return new MyPromise((resolve, reject) => {
+      const result = []
+      promises.forEach((promise, index) => {
+        MyPromise.resolve(promise)
+          .then(value => {
+            result[index] = value
+          })
+          .catch(error => {
+            reject(error)
+          })
+          .finally(() => {
+            if (result.length === promises.length) {
+              resolve(result)
+            }
+          })
+      })
+    })
+  }
+  allsettled(promises) {
+    if (!Array.isArray(promises)) {
+      throw new TypeError("promises must be an array")
+    }
+    return new MyPromise((resolve, reject) => {
+      const result = []
+      promises.forEach((promise, index) => {
+        MyPromise.resolve(promise)
+          .then(value => {
+            result[index] = {
+              status: "resolved",
+              value,
+            }
+          })
+          .catch(reason => {
+            result[index] = {
+              status: "rejected",
+              reason,
+            }
+          })
+          .finally(() => {
+            if (result.length === promises.length) {
+              resolve(result)
+            }
+          })
+      })
+    })
+  }
+  race(promises) {
+    if (!Array.isArray(promises)) {
+      throw new TypeError("promises must be an array")
+    }
+    return new MyPromise((resolve, reject) => {
+      promises.forEach(promise => {
+        MyPromise.resolve(promise)
+          .then(value => {
+            resolve(value)
+          })
+          .catch(reason => {
+            reject(reason)
+          })
+      })
+    })
   }
 }
 
@@ -240,4 +248,3 @@ function sendJson() {
     xhr.send(null)
   })
 }
-
