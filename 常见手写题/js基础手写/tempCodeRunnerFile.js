@@ -1,93 +1,116 @@
 class MyPromise {
   constructor(callback) {
     this.status = "pending"
-    // 成功的值
     this.value = undefined
-    // 失败的值
     this.reason = undefined
-    // 成功的函数
-    this.onResolveCallbacks = []
-    // 失败的函数
-    this.onRejectCallbacks = []
+    this.onResolvedCallback = []
+    this.onRejectedCallback = []
 
     const resolve = value => {
+      if (value instanceof MyPromise) {
+        return value.then(resolve, reject)
+      }
       if (this.status === "pending") {
         this.status = "resolved"
         this.value = value
-        this.onResolveCallbacks.forEach(cb => cb())
+        this.onResolvedCallback.forEach(fn => fn())
       }
     }
     const reject = reason => {
       if (this.status === "pending") {
         this.status = "rejected"
         this.reason = reason
-        this.onRejectCallbacks.forEach(cb => cb())
+        this.onRejectedCallback.forEach(fn => fn())
       }
     }
-    callback(resolve, reject)
+    try {
+      callback(resolve, reject)
+    } catch (error) {
+      reject(error)
+    }
   }
-  then(OnResolved, OnRejected) {
-    OnResolved = typeof OnResolved === "function" ? OnResolved : value => value
-    OnRejected =
-      typeof OnRejected === "function"
-        ? OnRejected
+  then(onResolved, onRejected) {
+    onResolved = typeof onResolved === "function" ? onResolved : value => value
+    onRejected =
+      typeof onRejected === "function"
+        ? onRejected
         : reason => {
             throw reason
           }
-    console.log("", OnResolved, OnRejected)
+
     const promise2 = new MyPromise((resolve, reject) => {
       if (this.status === "resolved") {
         try {
-          const x = OnResolved(this.value)
+          const x = onResolved(this.value)
           resolve(x)
         } catch (error) {
           reject(error)
         }
       } else if (this.status === "rejected") {
         try {
-          const x = OnRejected(this.reason)
+          const x = onRejected(this.reason)
           resolve(x)
         } catch (error) {
           reject(error)
         }
       }
       if (this.status === "pending") {
-        this.onResolveCallbacks.push(() => {
+        this.onResolvedCallback.push(() => {
           try {
-            const x = OnResolved(this.value)
+            const x = onResolved(this.value)
             resolve(x)
           } catch (error) {
             reject(error)
           }
         })
-        this.onRejectCallbacks.push(() => {
+        this.onRejectedCallback.push(() => {
           try {
-            const x = OnRejected(this.reason)
+            const x = onRejected(this.reason)
             resolve(x)
           } catch (error) {
             reject(error)
           }
         })
       } else {
-        // 执行完所有回调函数之后，清空回调数组
-        this.onResolvedCallbacks = []
-        this.onRejectedCallbacks = []
+        this.onResolvedCallback = []
+        this.onRejectedCallback = []
       }
     })
     return promise2
   }
-  catch(OnRejected) {
-    console.log("OnRejected", OnRejected)
-    return this.then(null, OnRejected)
+  catch(callback) {
+    return this.then(null, callback)
   }
 }
 
-// 测试代码
 const promise = new MyPromise((resolve, reject) => {
   setTimeout(() => {
     resolve("成功")
   }, 1000)
 })
-promise.then(1).then(value => {
-  console.log("value", value)
-})
+// promise.then(1).then(value => {
+//   console.log("value", value)
+// })
+promise
+  .then(value => {
+    console.log("2", value)
+    return "第一次"
+  })
+  .then(value => {
+    console.log("3", value)
+    return new MyPromise((resolve, reject) => {
+      setTimeout(() => {
+        resolve("第二次处理结果")
+      }, 1000)
+    }).then(result => {
+      console.log("result", result)
+      return result // 返回新的MyPromise实例的结果
+    })
+  })
+  .then(value => {
+    console.log(value)
+    throw new Error("抛出异常")
+  })
+  .catch(error => {
+    console.log(error)
+  })
