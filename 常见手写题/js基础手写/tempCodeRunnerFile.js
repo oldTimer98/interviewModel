@@ -1,28 +1,5 @@
-let obj = {
-  a: 1,
-  b: 2,
-  c: 3,
-}
-
-// obj[Symbol.iterator] = function () {
-//   let keys = Object.keys(obj) //  ["a", "b", "c"]
-//   let count = 0
-//   return {
-//     next() {
-//       if (count < keys.length) {
-//         return { value: obj[keys[count++]], done: false }
-//       } else {
-//         return { value: undefined, done: true }
-//       }
-//     },
-//   }
-// }
-obj[Symbol.iterator] = function* () {
-  const keys = Object.keys(obj)
-  for (const k of keys) {
-    yield [k, obj[k]]
-  }
-}
-for(var [k,v] of obj){
-  console.log(k,v);
-}
+let a = [{ b: 1 }, { b: 2 }, { b: 3 }, { b: 4 }]
+a.forEach(item => {
+  item.b += 1
+})
+console.log("a", a)

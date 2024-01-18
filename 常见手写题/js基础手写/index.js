@@ -398,3 +398,4 @@ function add(a, b, c) {
 
 let curriedAdd = currying(add)
 console.log(curriedAdd(2)(3)(4)()) // 输出 9
+

@@ -36,7 +36,7 @@ class MyPromise {
         : reason => {
             throw reason
           }
-    const promise2 = new Promise((resolve, reject) => {
+    const promise2 = new MyPromise((resolve, reject) => {
       if (this.status === "resolved") {
         try {
           const x = onResolved(this.value)
