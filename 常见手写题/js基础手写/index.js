@@ -281,25 +281,120 @@ let obj = {
   c: 3,
 }
 
-// obj[Symbol.iterator] = function () {
-//   let keys = Object.keys(obj) //  ["a", "b", "c"]
-//   let count = 0
-//   return {
-//     next() {
-//       if (count < keys.length) {
-//         return { value: obj[keys[count++]], done: false }
-//       } else {
-//         return { value: undefined, done: true }
-//       }
-//     },
-//   }
-// }
-obj[Symbol.iterator] = function* () {
+obj[Symbol.iterator] = function () {
   const keys = Object.keys(obj)
-  for (const k of keys) {
-    yield [k, obj[k]]
+  let count = 0
+  return {
+    next() {
+      if (keys.length < count) {
+        return { value: obj[keys[count++]], done: false }
+      } else {
+        return { value: undefined, done: true }
+      }
+    },
   }
 }
-for(var [k,v] of obj){
-  console.log(k,v);
+obj[Symbol.iterator] = function* () {
+  const keys = Object.keys(obj)
+  for (const key of keys) {
+    yield [key, obj[key]]
+  }
 }
+
+// 8. 手写防抖函数
+function debounce(fn, wait) {
+  let timer = null
+  return function (...args) {
+    let context = this
+    if (timer) {
+      clearTimeout(timer)
+      timer = null
+    }
+    timer = setTimeout(() => {
+      fn.apply(context, args)
+    }, wait)
+  }
+}
+// 9. 手写节流函数
+function throttle(fn, wait) {
+  let timer = null
+  return function (...args) {
+    let context = this
+    if (!timer) {
+      timer = setTimeout(() => {
+        fn.apply(context, args)
+        timer = null
+      }, wait)
+    }
+  }
+}
+
+function throttle(fn, wait) {
+  let curTime = Date.now()
+  return function (...args) {
+    let nowTime = Date.now()
+    if (nowTime - curTime >= wait) {
+      curTime = Date.now()
+      return fn.apply(this, args)
+    }
+  }
+}
+
+// 11. 手写 call 函数js
+function myCall(ctx, ...args) {
+  if (typeof this !== "function") return
+  let ctx = ctx || window
+  const fn = Symbol()
+  ctx[fn] = this
+  const result = ctx[fn](...args)
+  delete ctx[fn]
+  return result
+}
+
+function myApply(ctx, args) {
+  if (typeof this !== "function") return
+  let ctx = ctx || window
+  const fn = Symbol()
+  ctx[fn] = this
+  const result = ctx[fn](...args)
+  delete ctx[fn]
+  return result
+}
+
+function myBind(ctx, ...args1) {
+  if (typeof this !== "function") return
+  let fn = this
+  return function (...args2) {
+    let allArgs = [...args1, ...args2]
+    if (new.target) {
+      return new fn(...allArgs)
+    } else {
+      return fn.apply(ctx, ...allArgs)
+    }
+  }
+}
+// 14. 函数柯里化的实现
+function currying(fn) {
+  let args = []
+  return function temp(...newArgs) {
+    if (newArgs.length) {
+      args = [...args, ...newArgs]
+      return temp
+    } else {
+      const result = fn.apply(this, args)
+      args = []
+      return result
+    }
+  }
+}
+
+function currying(fn, ...args) {
+  return fn.length <= args.length ? fn(...args) : currying.bind(null, fn, ...args)
+}
+
+function add(a, b, c) {
+  return a + b + c
+}
+
+let curriedAdd = currying(add)
+console.log(curriedAdd(2)(3)(4)()) // 输出 9
