@@ -248,3 +248,31 @@ function sendJson() {
     xhr.send(null)
   })
 }
+
+function dateFormat(dateInput, format) {
+  var date = new Date(dateInput)
+  let day = date.getDay()
+  let month = /[\u4E00-\u9FFF]/.test(format) ? date.getMonth() + 1 : (date.getMonth() + 1).toString().padStart(2, "0")
+  let year = date.getFullYear()
+  format = format.replace(/yyyy/, year)
+  format = format.replace(/MM/, month)
+  format = format.replace(/dd/, day)
+  console.log("", format)
+}
+
+dateFormat(new Date("2020-12-01"), "yyyy/MM/dd") // 2020/12/01
+dateFormat(new Date("2020-04-01"), "yyyy/MM/dd") // 2020/04/01
+dateFormat(new Date("2020-04-01"), "yyyy年MM月dd日") // 2020年04月01日
+
+a = a + b
+b = a - b // b = a
+a = a - b // a+b-a = b
+
+var arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+for (let i = 0; i < arr.length; i++) {
+  const randomIndex = Math.floor(Math.random() * (arr.length - 1) - i) + i
+  ;[arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]]
+}
+
+const sum = arr.reduce((total, i) => (total += i), 0)
+console.log("sum", sum)
