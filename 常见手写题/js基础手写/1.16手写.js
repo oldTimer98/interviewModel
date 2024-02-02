@@ -268,11 +268,146 @@ a = a + b
 b = a - b // b = a
 a = a - b // a+b-a = b
 
-var arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-for (let i = 0; i < arr.length; i++) {
-  const randomIndex = Math.floor(Math.random() * (arr.length - 1) - i) + i
-  ;[arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]]
+// var arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+// for (let i = 0; i < arr.length; i++) {
+//   const randomIndex = Math.floor(Math.random() * (arr.length - 1) - i) + i
+//   ;[arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]]
+// }
+
+// const sum = arr.reduce((total, i) => (total += i), 0)
+// console.log("sum", sum)
+// 实现数组的乱序排列
+// function randomNum(arr){
+//   for (let i = 0; i < arr.length; i++) {
+//     const randomIndex= Math.round(Math.random() * (arr.length - 1 -i)+i);
+//     [arr[randomIndex], arr[i]] =[arr[i],arr[randomIndex]]
+
+//   }
+//   console.log('arr',arr);
+// }
+// function randomNum(arr) {
+//   let length = arr.length,
+//     randomIndex,
+//     temp
+//   while (length) {
+//     randomIndex = Math.floor(Math.random() * length--)
+//     temp = arr[length]
+//     arr[length] = arr[randomIndex]
+//     arr[randomIndex] = temp
+//   }
+//   console.log("arr", arr)
+// }
+// console.log("", randomNum([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))
+// let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+// let sum = arr.reduce((sum, cur) => sum + cur, 0)
+// let arr=[1,2,3,[[4,5],6],7,8,9]
+// arr = arr.toString().split(',').reduce((sum, cur) => sum + Number(cur), 0)
+// let arr = [1, 2, 3, 4, 5, 6]
+// function add(arr){
+//   if(arr.length===1) return arr[0]
+//   return arr[0] + add(arr.slice(1))
+// }
+// console.log(add(arr));
+
+// 数组扁平化
+
+let arr = [1, [2, [3, 4, 5]]]
+// function flatten(arr) {
+//   let result = []
+//   for (let i = 0; i < arr.length; i++) {
+//     if (Array.isArray(arr[i])) {
+//       result = result.concat(flatten(arr[i]))
+//     } else {
+//       result.push(arr[i])
+//     }
+//   }
+//   return result
+// }
+
+// function flatten(arr) {
+//   return arr.reduce((pre, cur) => {
+//     return pre.concat(Array.isArray(cur) ? flatten(cur) : cur)
+//   }, [])
+// }
+// function flatten(arr) {
+//   console.log('arr',arr);
+//   return arr.map(item => (Array.isArray(item) ? flatten(item) : item)).reduce((pre, cur) => pre.concat(cur), [])
+// }
+function flatten(arr) {
+  while (arr.some(item => Array.isArray(item))) {
+    arr = [].concat(...arr)
+  }
+  return arr
+}
+function flatten(arr) {
+  return arr.toString().split(",").map(Number)
+}
+function flatten(arr) {
+  return arr.flat(Infinity)
+}
+function flatten(arr) {
+  let str = JSON.stringify(arr)
+  str = str.replace(/\[|\]/g, "")
+  return str.split(",").map(Number)
+}
+console.log("", flatten([1, [2, [3, 4, 5]]]))
+// 去重
+console.log("", new Set([1, 2, 3, 5, 1, 5, 9, 1, 2, 8]))
+
+// function uniqueArray(arr) {
+//   let map = {}
+//   let res = []
+//   for (let i = 0; i < arr.length; i++) {
+//     if (!map.hasOwnProperty(arr[i])) {
+//       map[arr[i]] = 1
+//       res.push(arr[i])
+//     }
+//   }
+//   console.log("res,map", res, map)
+//   return res
+// }
+console.log("", uniqueArray([1, 2, 3, 5, 1, 5, 9, 1, 2, 8]))
+
+function _flat(arr, depth) {
+  if (!Array.isArray(arr) || depth <= 0) {
+    return arr
+  }
+  return arr.reduce((prev, cur) => {
+    if (Array.isArray(cur)) {
+      return prev.concat(_flat(cur, depth - 1))
+    } else {
+      return prev.concat(cur)
+    }
+  }, [])
+}
+// push
+Array.prototype.myPush = function () {
+  for (let i = 0; i < arguments.length; i++) {
+    this[this.length] = arguments[i]
+  }
+  return this.length
+}
+// filter
+
+Array.prototype.myFilter = function (fn) {
+  if (typeof fn !== "function") {
+    throw Error("参数必须是一个函数")
+  }
+  const res = []
+  for (let i = 0; i < this.length; i++) {
+    fn(this[i]) && res.push(this[i])
+  }
+  return res
 }
 
-const sum = arr.reduce((total, i) => (total += i), 0)
-console.log("sum", sum)
+// map
+Array.prototype.myFilter = function (fn) {
+  if (typeof fn !== "function") {
+    throw Error("参数必须是一个函数")
+  }
+  const res = []
+  for (let i = 0; i < this.length; i++) {
+    res.push(this[i])
+  }
+  return res
+}

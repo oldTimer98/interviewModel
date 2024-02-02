@@ -1,8 +1,13 @@
-var arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-for (let i = 0; i < arr.length; i++) {
-  const randomIndex = Math.floor(Math.random() * (arr.length - 1) - i) + i
-  ;[arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]]
+function uniqueArray(arr) {
+  let map = {}
+  let res = []
+  for (let i = 0; i < arr.length; i++) {
+    if (!map.hasOwnProperty(arr[i])) {
+      map[arr[i]] = 1
+      res.push(arr[i])
+    }
+  }
+  console.log("res,map", res, map)
+  return res
 }
-
-const sum = arr.reduce((total, i) => (total += i), 0)
-console.log("sum", sum)
+console.log("", uniqueArray([1, 2, 3, 5, 1, 5, 9, 1, 2, 8]))
