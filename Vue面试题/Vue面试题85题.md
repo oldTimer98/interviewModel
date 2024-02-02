@@ -2,31 +2,32 @@
 
 - 条件渲染：v-if、  v-else、  v-else-if、  v-show（注意，v-show 不支持 <template> 元素，也不支持 v-else）
 
-  列表渲染：v-for
+- 列表渲染：v-for
 
-  监听事件：v-on
+- 监听事件：v-on
 
-  表单输入绑定：v-model
+- 表单输入绑定：v-model
 
-  其他：v-bind、v-html、v-text
+- 其他：v-bind、v-html、v-text
 
-  ###### **v-if  vs  v-show: 以下是vue官方文档的描述。**[#17](https://www.yuque.com/jiushiguang-rxyf3/rakm88/ai2hrtpshwkwt5hi#nofbc)
 
-  v-if 是“真正”的条件渲染，因为它会确保在切换过程中条件块内的事件监听器和子组件适当地被销毁和重建。
+###### **v-if  vs  v-show: 以下是vue官方文档的描述。**[#17](#nofbc)
 
-  v-if 也是**惰性的**：如果在初始渲染时条件为假，则什么也不做——直到条件第一次变为真时，才会开始渲染条件块。
+v-if 是“真正”的条件渲染，因为它会确保在切换过程中条件块内的事件监听器和子组件适当地被销毁和重建。
+v-if 也是**惰性的**：如果在初始渲染时条件为假，则什么也不做——直到条件第一次变为真时，才会开始渲染条件块。
+相比之下，v-show 就简单得多——不管初始条件是什么，元素总是会被渲染，并且只是简单地基于 CSS 进行切换。
+一般来说，v-if 有更高的切换开销，而 v-show 有更高的初始渲染开销。因此，如果需要非常频繁地切换，则使用 v-show 较好；如果在运行时条件很少改变，则使用 v-if 较好。
 
-  相比之下，v-show 就简单得多——不管初始条件是什么，元素总是会被渲染，并且只是简单地基于 CSS 进行切换。
-
-  一般来说，v-if 有更高的切换开销，而 v-show 有更高的初始渲染开销。因此，如果需要非常频繁地切换，则使用 v-show 较好；如果在运行时条件很少改变，则使用 v-if 较好。
-
-  - **手段****：v-if是动态的向DOM树内添加或者删除DOM元素；v-show是通过设置DOM元素的display样式属性控制显隐；**
-  - **编译过程****：v-if切换有一个局部编译/卸载的过程，切换过程中合适地销毁和重建内部的事件监听和子组件；v-show只是简单的基于css切换；**
-  - **编译条件****：v-if是惰性的，如果初始条件为假，则什么也不做；只有在条件第一次变为真时才开始局部编译; v-show是在任何条件下，无论首次条件是否为真，都被编译，然后被缓存，而且DOM元素保留；**
-  - **性能消耗****：v-if有更高的切换消耗；v-show有更高的初始渲染消耗；**
-  - **使用场景：v-if适合运营条件不大可能改变；v-show适合频繁切换。**
+- **手段：v-if是动态的向DOM树内添加或者删除DOM元素；v-show是通过设置DOM元素的display样式属性控制显隐；**
+- **编译过程：v-if切换有一个局部编译/卸载的过程，切换过程中合适地销毁和重建内部的事件监听和子组件；v-show只是简单的基于css切换；**
+- **编译条件：v-if是惰性的，如果初始条件为假，则什么也不做；只有在条件第一次变为真时才开始局部编译; v-show是在任何条件下，无论首次条件是否为真，都被编译，然后被缓存，而且DOM元素保留；**
+- **性能消耗：v-if有更高的切换消耗；v-show有更高的初始渲染消耗；**
+- **使用场景：v-if适合运营条件不大可能改变；v-show适合频繁切换。**
 
 ## 2、vuediff算法的原理
+
+[https://juejin.cn/post/7010594233253888013](https://juejin.cn/post/7010594233253888013)
+[https://juejin.cn/post/7045976871116210213](https://juejin.cn/post/7045976871116210213)
 
 ##### Diff 算法的优化
 
@@ -44,17 +45,17 @@ Vue 在 patch 过程中会判断两个节点是不是相同节点时，key 是�
 
 从源码里可以知道，Vue 判断两个节点是否相同时主要判断两者的元素类型和 key 等，如果不设置 key，就可能永远认为这两个是相同节点，只能去做更新操作，就造成大量不必要的 DOM 更新操作，明显是不可取的。
 
-key的作用
+**key的作用**
 
 在Vue的虚拟DOM算法中，key的作用主要有两个：
 
-1.优化组件的渲染，减少DOM操作
+1. 优化组件的渲染，减少DOM操作
 
 当列表中的数据发生变化时，Vue会使用diff算法来比较旧的虚拟DOM树和新的虚拟DOM树，找出需要更新的节点，然后进行DOM操作。如果列表中每一项都没有key，那么默认情况下使用节点的索引作为key，这样做会导致在对列表中的数据进行删除、添加等操作时，所有后面的节点都需要重新创建和渲染，这样会导致性能上的浪费。
 
 当我们使用key时，Vue会通过比较新旧节点的key值来判断哪些节点需要更新，哪些节点需要删除和添加。这样可以大大减少DOM操作的次数，提高页面的性能。
 
-2.标识每个节点的唯一性，提高虚拟DOM算法的效率
+2. 标识每个节点的唯一性，提高虚拟DOM算法的效率
 
 当有节点需要被移动时，Vue会根据节点的key值来判断是否是同一个节点。如果节点没有key，那么Vue会根据节点的标签名称、属性和子节点来判断是否为同一个节点，这样会导致效率上的低下。
 
@@ -96,7 +97,7 @@ Vue的diff算法具体实现如下：
 - 新的头和老的尾对比
 - 新的尾和老的头对比
 
-vue3---双端对比算法以及静态标记
+**vue3---双端对比算法以及静态标记**
 
 - 头和头比
 - 尾和尾比
@@ -187,8 +188,17 @@ b. extends 类似于mixin,相当于继承,但是只是继承 options Api 中的�
 - 规范化选项（normalizeProps、normalizelnject、normalizeDirectives)
 - 对未合并的选项，进行判断
 
-```
-if(!child._base) {    if(child.extends) {        parent = mergeOptions(parent, child.extends, vm)    }    if(child.mixins) {        for(let i = 0, l = child.mixins.length; i < l; i++){            parent = mergeOptions(parent, child.mixins[i], vm)        }    } }
+```js
+if(!child._base) {    
+   if(child.extends) {        
+      parent = mergeOptions(parent, child.extends, vm)    
+   }    
+   if(child.mixins) {  
+      for(let i = 0, l = child.mixins.length; i < l; i++){  
+        parent = mergeOptions(parent, child.mixins[i], vm)    
+     }   
+   }
+}
 ```
 
 - 合并处理：根据一个通用 Vue 实例所包含的选项进行分类逐一判断合并，如 props、data、 methods、watch、computed、生命周期等，将合并结果存储在新定义的 options 对象里
@@ -199,20 +209,37 @@ if(!child._base) {    if(child.extends) {        parent = mergeOptions(parent, c
 Composition API、 TypeScript 支持、响应式 API、Async 异步组件、Teleport、Proxy-Based Reactivity System
 
 1. 响应式系统改变：Vue2采用Object.defineProperty实现响应式系统，Vue3使用了更高效的Proxy代理对象实现响应式系统，提高了性能和稳定性。
+
 2. 数据改变检测方式改变：Vue2采用递归的方式进行数据改变检测，Vue3使用了基于Proxy的观测机制和内部追踪之间的关系，有效解决了Vue2数据检测的性能瓶颈。
 
-检测属性的添加和删除；
-检测数组索引和长度的变更；
-支持 Map、Set、WeakMap 和 WeakSet。
+   - 检测属性的添加和删除；
 
-1. 生命周期改变：Vue3废除了Vue2中的beforeDestroy和activated钩子函数，并新增了两个钩子函数：beforeUnmount 和unmounted；此外，activated和deactivated这两个钩子在Vue3中被废弃，使用setup()返回的对象的onActivated和onDeactivated属性来替代。。
-2. 异步组件改变：Vue3使用全局函数defineAsyncComponent来定义异步组件，从而方便了异步组件的使用。
-3. Teleport改变：Vue3在Teleport中添加了两个插槽，分别是空插槽和to插槽，用于在传输过程中处理内容的变化。
-4. 编译器改变：Vue3的编译器已被拆分为单独的包（@vue/compiler-sfc），可以进行独立地安装和使用
-5. 更好的TypeScript支持：Vue3对TypeScript的支持更加友好，引入了完全支持类型推断的API和更好的类型定义。
-6. Composition API改变：Vue3引入了Composition API，可以更好地组织和管理组件中的代码，提高开发效率。
+   - 检测数组索引和长度的变更；
+
+   - 支持 Map、Set、WeakMap 和 WeakSet。
+
+3. 生命周期改变：Vue3废除了Vue2中的beforeDestroy和activated钩子函数，并新增了两个钩子函数：beforeUnmount 和unmounted；此外，activated和deactivated这两个钩子在Vue3中被废弃，使用setup()返回的对象的onActivated和onDeactivated属性来替代。。
+4. 异步组件改变：Vue3使用全局函数defineAsyncComponent来定义异步组件，从而方便了异步组件的使用。
+5. Teleport改变：Vue3在Teleport中添加了两个插槽，分别是空插槽和to插槽，用于在传输过程中处理内容的变化。
+6. 编译器改变：Vue3的编译器已被拆分为单独的包（@vue/compiler-sfc），可以进行独立地安装和使用
+7. 更好的TypeScript支持：Vue3对TypeScript的支持更加友好，引入了完全支持类型推断的API和更好的类型定义。
+8. Composition API改变：Vue3引入了Composition API，可以更好地组织和管理组件中的代码，提高开发效率。
 
 ## 5、说一下generator的原理
+
+[https://juejin.cn/post/7111347194904444958](https://juejin.cn/post/7111347194904444958)
+Generator是ES6引入的一种新的函数类型，它可以让函数在执行时暂停，后续又可在需要时恢复执行。Generator是一种特殊的迭代器，用于生成一系列的值。
+Generator的原理可以分为以下几个步骤：
+
+1.  当调用一个Generator函数时，它并不会立即执行，而是返回一个迭代器对象（Iterator）。 
+2.  当不断调用迭代器的next()方法时，Generator函数内部的代码会逐行执行，直到执行到第一个yield关键字时，代码会暂停，并将yield后面的表达式的值作为Generator函数返回对象的value属性值返回，此时yield表达式本身并没有执行。 
+3.  在下一次调用next()方法时，由于上一次暂停时保存的上下文（Context）信息仍然存在，所以Generator函数内部的代码会从上一次暂停的地方继续执行，直到再次执行到yield关键字，代码会再次暂停，并将最新的yield后面的表达式的值作为Generator函数返回对象的value属性值返回。 
+4.  通过对迭代器的不断调用next()方法，可以一步步地取出所有Generator函数中yield关键字后的表达式的值，直到函数执行结束，Generator函数返回的迭代器的done属性值变为true。 
+
+需要注意的是，Generator函数可以通过yield关键字返回任意次数的值，此外，Generator函数内部任意一处抛出异常都会导致迭代器的done属性变为true，并且抛出的异常会在外部代码中被捕获。除此之外，Generator函数还可以通过yield*关键字委托给其他Generator函数，从而实现协程的功能
+
+只记下面的
+当调用一个 Generator 函数时，它返回一个迭代器 (iterator)，并不会立即执行
 
 ```javascript
 function* generatorFn() {
@@ -312,14 +339,13 @@ Vue.js 是采用数据劫持结合发布者-订阅者模式的方式，通过Obj
 
 ## 8. 使用 Object.defineProperty() 跟Proxy进行数据劫持分别有什么缺点？
 
-1.  **Object.defineProperty()****在对一些属性进行操作时，使用这种方法无法拦截**
+1.  **Object.defineProperty()在对一些属性进行操作时，使用这种方法无法拦截**
 
 比如通过下标方式修改数组数据或者给对象新增属性，这都不能触发组件的重新渲染，因为 Object.defineProperty 不能拦截到这些操作。更精确的来说，对于数组而言，大部分操作都是拦截不到的，只是 Vue 内部通过重写函数的方式解决了这个问题。
 
-1. **通过使用 Proxy 对对象进行代理，从而实现数据劫持**
+2. **通过使用 Proxy 对对象进行代理，从而实现数据劫持**
 
 在 Vue3.0 中已经不使用这种方式了，而是通过使用 Proxy 对对象进行代理，从而实现数据劫持。使用Proxy 的好处是它可以完美的监听到任何方式的数据改变，唯一的缺点是兼容性的问题，因为 Proxy 是 ES6 的语法。使用
-
 1.Object.defineProperty() 进行数据劫持的缺点：
 
 1. 只能监听属性的读取、修改操作，无法监听数组的 push、pop、shift、unshift、splice 等方法。
@@ -367,9 +393,9 @@ watch属性用于监听数据的变化，并在数据变化时执行一些逻辑
 - 支持异步监听
 - 监听的函数接收两个参数，第一个参数是最新的值，第二个是变化之前的值
 - 当一个属性发生变化时，就需要执行相应的操作
+  - 监听数据必须是data中声明的或者父组件传递过来的props中的数据，当发生变化时，会触发其他操作，函数有两个的参数：
+  - immediate：组件加载立即触发回调函数deep：深度监听，发现数据内部的变化，在复杂数据类型中使用，例如数组中的对象发生变化。需要注意的是，deep无法监听到数组和对象内部的变化。
 
-- 监听数据必须是data中声明的或者父组件传递过来的props中的数据，当发生变化时，会触发其他操作，函数有两个的参数：
-- immediate：组件加载立即触发回调函数deep：深度监听，发现数据内部的变化，在复杂数据类型中使用，例如数组中的对象发生变化。需要注意的是，deep无法监听到数组和对象内部的变化。
 
 当想要执行异步或者昂贵的操作以响应不断的变化时，就需要使用watch。
 
@@ -408,32 +434,28 @@ slot又分三类：**默认插槽，具名插槽和作用域插槽**
 
 ## 12. 说一下mvc、mvp以及mvvm的区别和使用场景
 
+MVC、MVP以及MVVM均是一种架构模式，其主要的区别在于视图层如何与模型层交互以及数据流的流向。
+
+1. MVC（Model-View-Controller）模式：
+
+MVC模式将应用程序分成三个主要的部分:模型、视图和控制器。模型是应用程序的核心，模型表示某些数据以及如何操作数据。视图是显示数据的地方。控制器向模型发出指令，更新模型，然后通过视图展示模型的数据。
 优点：MVC模式可以将要处理的数据、数据的呈现方式和用户交互分离出来，极大地降低了应用程序各个模块间的耦合度，提高了代码的可维护性以及可扩展性。MVC模式的每个部分各司其职，代码更加清晰。
-
 缺点：MVC模式存在的问题在于视图和控制器之间的紧密耦合，使得一个部分的改变需要牵扯到其他部分的修改，这样会导致代码难以维护。
-
 使用场景：适用于简单的应用程序，如简单的Web应用程序、桌面应用程序等。
 
-1. MVP（Model-View-Presenter）模式：
+2. MVP（Model-View-Presenter）模式：
 
 MVP模式是MVC模式的变体，它将控制器拆分为Presenter和View，然后通过Presenter和View之间的接口进行通信。Presenter负责从模型层读取数据，并将其提供给视图层展示，视图层向Presenter发出指令并传递用户事件，Presenter对这些事件做出反应并更新模型。
-
 优点：MVP模式的Presenter起到了连接视图层和模型层的桥梁，可以非常有效的降低视图和模型层之间的耦合度，使得代码更容易扩展和维护。
-
 缺点：MVP模式的缺点在于它的实现难度较高，因为需要实现观察者模式并在交互的过程中处理复杂的事件流。
-
 使用场景：适用于大型的GUI应用程序，如WPF图形化应用程序、Android应用程序等。
 
-1. MVVM（Model-View-ViewModel）模式：
+3. MVVM（Model-View-ViewModel）模式：
 
 MVVM模式是一种由Microsoft提出的模式，它将视图层和模型层分离，并引入了ViewModel来管理UI控件。ViewModel是一种特殊的控制器，它使视图和模型紧密连接在一起，ViewModel负责视图层的更新和绑定，处理用户事件并更新模型，从而实现数据双向绑定。
-
 优点：MVVM模式的最大优点就是实现了双向绑定，并且可以将界面的数据与业务逻辑分离，有效解决了MVC和MVP模式的缺点。MVVM模式可以提高代码的可维护性以及可测试性。
-
 缺点：MVVM模式的最大缺点就是它的实现较为复杂，需要依赖于处理数据的庞大框架，需要学习额外的语法和学习曲线。
-
 使用场景：适用于Web应用程序和大型单页应用程序，如AngularJS和Vue.js。
-
 总结：综合来看，MVC，MVP，MVVM三种模式各有优劣，具体应该按照实际的应用场景选择适合的模式。MVC适合于小型的应用程序，MVP适合于大型的GUI程序，MVVM适合于Web底层框架。
 
 ## 13. 如何保存页面的当前的状态
@@ -448,9 +470,7 @@ MVVM模式是一种由Microsoft提出的模式，它将视图层和模型层分�
 ###### **组件会被卸载：**
 
 **（1）将状态存储在LocalStorage / SessionStorage**
-
 只需要在组件即将被销毁的生命周期 componentWillUnmount （react）中在 LocalStorage / SessionStorage 中把当前组件的 state 通过 JSON.stringify() 储存下来就可以了。在这里面需要注意的是组件更新状态的时机。
-
 比如从 B 组件跳转到 A 组件的时候，A 组件需要更新自身的状态。但是如果从别的组件跳转到 B 组件的时候，实际上是希望 B 组件重新渲染的，也就是不要从 Storage 中读取信息。所以需要在 Storage 中的状态加入一个 flag 属性，用来控制 A 组件是否读取 Storage 中的状态。
 
 ##### 优点
@@ -464,9 +484,7 @@ MVVM模式是一种由Microsoft提出的模式，它将视图层和模型层分�
 - 如果 B 组件后退或者下一页跳转并不是前组件，那么 flag 判断会失效，导致从其他页面进入 A 组件页面时 A 组件会重新读取 Storage，会造成很奇怪的现象
 
 **（2）路由传值**
-
 通过 react-router 的 Link 组件的 prop —— to 可以实现路由间传递参数的效果。
-
 在这里需要用到 state 参数，在 B 组件中通过 history.location.state 就可以拿到 state 值，保存它。返回 A 组件时再次携带 state 达到路由状态保持的效果。
 
 ##### 优点
@@ -481,7 +499,6 @@ MVVM模式是一种由Microsoft提出的模式，它将视图层和模型层分�
 ###### **组件不会被卸载：**
 
 **（1）单页面渲染**
-
 要切换的组件作为子组件全屏渲染，父组件中正常储存页面状态。
 
 ##### 优点
@@ -496,7 +513,6 @@ MVVM模式是一种由Microsoft提出的模式，它将视图层和模型层分�
 - 无法利用路由定位页面
 
 除此之外，在Vue中，还可以是用keep-alive来缓存页面，当组件在keep-alive内被切换时组件的activated、deactivated这两个生命周期钩子函数会被执行
-
 **被包裹在keep-alive中的组件的状态将会被保留：**
 
 ```js
@@ -558,16 +574,14 @@ MVVM模式是一种由Microsoft提出的模式，它将视图层和模型层分�
 -  对于 `checkbox` 和 `radio` 元素，`v-model` 通过监听 `change` 事件实现数据绑定。 
 -  对于 `select` 元素，`v-model` 通过监听 `change` 事件实现数据绑定，同时可以通过 `multiple` 属性实现多选数据绑定。 
 
-1. 监听输入框的值变化
+2. 监听输入框的值变化
 
 `v-model` 通过引入 `oninput` 或 `onchange` 等事件来监听表单元素的值的变化。在监听到输入框的值改变时，通过 `v-bind` 指令将数据对象中的属性值绑定到表单元素的 `value` 属性上。
 
-1. 将输入框的值改变时的事件与数据对象绑定起来
+3. 将输入框的值改变时的事件与数据对象绑定起来
 
 在表单元素的值改变时，通过 `v-on` 指令绑定一个事件，将输入框的值改变时触发的事件与数据对象的属性绑定起来，保证数据对象属性的值与表单元素的值同步更新。
-
 综上所述，`v-model` 本质上是对多个指令进行了封装和优化，使用起来更加方便和简洁。
-
 `v-model` 除了可以用在表单元素中，也可以用在自定义组件中，并且在两种场景下都有不同的作用。
 
 #### 适用于表单元素
@@ -675,10 +689,10 @@ export default {
 
 **显然，custom-input 与父组件的交互如下：**
 
-1. **父组件将** **searchText****变量传入custom-input 组件，使用的 prop 名为** **value****；**
-2. **custom-input 组件向父组件传出名为** **input****的事件，父组件将接收到的值赋值给** **searchText****；
+1. **父组件将 searchText变量传入custom-input 组件，使用的 prop 名为 value；**
+2. **custom-input 组件向父组件传出名为 input的事件，父组件将接收到的值赋值给 searchText；**
 
-所以，custom-input 组件的实现应该类似于这样：**
+**所以，custom-input 组件的实现应该类似于这样：**
 
 ```js
 Vue.component('custom-input', {
@@ -694,11 +708,9 @@ Vue.component('custom-input', {
 
 ## 18.  data为什么是一个函数而不是对象
 
-**JavaScript中的对象是****引用类型的数据，当多个实例引用同一个对象时，只要一个实例对这个对象进行操作，其他实例中的数据也会发生变化。**
-
+**JavaScript中的对象是引用类型的数据，当多个实例引用同一个对象时，只要一个实例对这个对象进行操作，其他实例中的数据也会发生变化。**
 **而在Vue中，更多的是想要复用组件，那就需要每个组件都有自己的数据，这样组件之间才不会相互干扰。**
-
-**所以组件的数据不能写成对象的形式，而是要写成函数的形式。****数据以函数返回值的形式定义，这样当每次复用组件的时候，就会返回一个新的data，也就是说每个组件都有自己的私有数据空间，它们各自维护自己的数据，不会干扰其他组件的正常运行。**
+**所以组件的数据不能写成对象的形式，而是要写成函数的形式。数据以函数返回值的形式定义，这样当每次复用组件的时候，就会返回一个新的data，也就是说每个组件都有自己的私有数据空间，它们各自维护自己的数据，不会干扰其他组件的正常运行。**
 
 ## 19. $nextTick 原理及作用
 
@@ -809,8 +821,7 @@ function flushCallbacks () {
 
 ## 20. Vue template 到 render 的过程
 
-**vue的模版编译过程主要如下：****template -> ast -> render函数**
-
+**vue的模版编译过程主要如下：template -> ast -> render函数**
 **vue 在模版编译版本的码中会执行 compileToFunctions 将template转化为render函数：**
 
 ```js
@@ -819,29 +830,20 @@ const { render, staticRenderFns } = compileToFunctions(template,options//省略}
 ```
 
 **CompileToFunctions中的主要逻辑如下∶**
-
 **（1）调用parse方法将template转化为ast（抽象语法树）**
-
 constast = parse(template.trim(), options)
 
-- **parse的目标****：把tamplate转换为AST树，它是一种用 JavaScript对象的形式来描述整个模板。**
-- **解析过程****：利用正则表达式顺序解析模板，当解析到开始标签、闭合标签、文本的时候都会分别执行对应的 回调函数，来达到构造AST树的目的。**
+- **parse的目标：把tamplate转换为AST树，它是一种用 JavaScript对象的形式来描述整个模板。**
+- **解析过程：利用正则表达式顺序解析模板，当解析到开始标签、闭合标签、文本的时候都会分别执行对应的 回调函数，来达到构造AST树的目的。**
 
 **AST元素节点总共三种类型：type为1表示普通元素、2为表达式、3为纯文本**
-
 **（2）对静态节点做优化**
-
 optimize(ast,options)
-
 **这个过程主要分析出哪些是静态节点，给其打一个标记，为后续更新渲染可以直接跳过静态节点做优化**
-
 **深度遍历AST，查看每个子树的节点元素是否为静态节点或者静态节点根。如果为静态节点，他们生成的DOM永远不会改变，这对运行时模板更新起到了极大的优化作用。**
-
 **（3）生成代码**
-
 const code = generate(ast, options)
-
-**generate将ast抽象语法树编译成 render字符串并将静态部分放到 staticRenderFns 中，最后通过** **new Function(render)** **生成render函数。**
+**generate将ast抽象语法树编译成 render字符串并将静态部分放到 staticRenderFns 中，最后通过 new Function(render) 生成render函数。**
 
 ## 21. Vue data 中某一个属性的值发生改变后，视图会立即同步执行重新渲染吗？
 
@@ -897,11 +899,10 @@ addObjB () (
 
 **一般需要对DOM元素进行底层操作时使用，尽量只用来操作 DOM展示，不修改内部的值。当使用自定义指令直接修改 value 值时绑定v-model的值也不会同步更新；如必须修改可以在自定义指令中使用keydown事件，在vue组件中使用 change事件，回调中修改vue数据;**
 
-**（1）自定义指令基本内容**
-
-- **全局定义：****Vue.directive("focus",{})**
-- **局部定义：****directives:{focus:{}}**
-- **钩子函数：指令定义对象提供钩子函数**
+- **（1）自定义指令基本内容**
+  - **全局定义：Vue.directive("focus",{})**
+  - **局部定义：directives:{focus:{}}**
+  - **钩子函数：指令定义对象提供钩子函数**
 
 ```js
 bind：只调用一次，指令第一次绑定到元素时调用。在这里可以进行一次性的初始化设置。
@@ -948,10 +949,8 @@ oldVnode：上一个虚拟节点（更新钩子函数中才有用）
 ## 24. 子组件可以直接改变父组件的数据吗？
 
 **子组件不可以直接改变父组件的数据。这样做主要是为了维护父子组件的单向数据流。每次父级组件发生更新时，子组件中所有的 prop 都将会刷新为最新的值。如果这样做了，Vue 会在浏览器的控制台中发出警告。**
-
 **Vue提倡单向数据流，即父级 props 的更新会流向子组件，但是反过来则不行。这是为了防止意外的改变父组件状态，使得应用的数据流变得难以理解，导致数据流混乱。如果破坏了单向数据流，当应用复杂时，debug 的成本会非常高。**
-
-只能通过**$emit**派发一个自定义事件，父组件接收到后，由父组件修改。
+**只能通过$emit派发一个自定义事件，父组件接收到后，由父组件修改。**
 
 ## 25.  Vue是如何收集依赖的？
 
@@ -975,10 +974,8 @@ function defineReactive (obj, key, val){
 }
 ```
 
-**以上只保留了关键代码，主要就是** **const dep = new Dep()****实例化一个 Dep 的实例，然后在 get 函数中通过** **dep.depend()** **进行依赖收集。**
-
+**以上只保留了关键代码，主要就是 const dep = new Dep()实例化一个 Dep 的实例，然后在 get 函数中通过 dep.depend() 进行依赖收集。**
 **（1）Dep**
-
 **Dep是整个依赖收集的核心，其关键代码如下：**
 
 ```js
@@ -1058,95 +1055,80 @@ new Watcher(vm, updateComponent)
 ```
 
 **get 方法中的 pushTarget 实际上就是把 Dep.target 赋值为当前的 watcher。**
-
-**this.getter.call（vm，vm），这里的 getter 会执行 vm.*****render() 方法，在这个过程中便会触发数据对象的 getter。那么每个对象值的 getter 都持有一个 dep，在触发 getter 的时候会调用 dep.depend() 方法，也就会执行 Dep.target.addDep(this)。刚才 Dep.target 已经被赋值为 watcher，于是便会执行 addDep 方法，然后走到 dep.addSub() 方法，便将当前的 watcher 订阅到这个数据持有的 dep 的 subs 中，这个目的是为后续数据变化时候能通知到哪些 subs 做准备。所以在 vm.*****render() 过程中，会触发所有数据的 getter，这样便已经完成了一个依赖收集的过程。**
+**this.getter.call（vm，vm），这里的 getter 会执行 vm.__render() 方法，在这个过程中便会触发数据对象的 getter。那么每个对象值的 getter 都持有一个 dep，在触发 getter 的时候会调用 dep.depend() 方法，也就会执行 Dep.target.addDep(this)。刚才 Dep.target 已经被赋值为 watcher，于是便会执行 addDep 方法，然后走到 dep.addSub() 方法，便将当前的 watcher 订阅到这个数据持有的 dep 的 subs 中，这个目的是为后续数据变化时候能通知到哪些 subs 做准备。所以在 vm.__render() 过程中，会触发所有数据的 getter，这样便已经完成了一个依赖收集的过程。**
 
 ## 26、对 React 和 Vue 的理解，它们的异同
 
-**相似之处：**
+- **相似之处：**
 
-- **都将注意力集中保持在核心库，而将其他功能如路由和全局状态管理交给相关的库；****（Ren）**
-- **都有自己的构建工具，能让你得到一个根据最佳实践设置的项目模板；**
-- **都使用了Virtual DOM（虚拟DOM）提高重绘性能；****（Ren）**
-- **都有props的概念，允许组件间的数据传递；****（Ren）**
-- **都鼓励组件化应用，将应用分拆成一个个功能明确的模块，提高复用性。****（Ren）**
-- **都支持native源生的方案，react的RN（reactNative）和vue的weex；（Ren）**
+  - **都将注意力集中保持在核心库，而将其他功能如路由和全局状态管理交给相关的库；（Ren）**
+  - **都有自己的构建工具，能让你得到一个根据最佳实践设置的项目模板；**
+  - **都使用了Virtual DOM（虚拟DOM）提高重绘性能；（Ren）**
+  - **都有props的概念，允许组件间的数据传递；（Ren）**
+  - **都鼓励组件化应用，将应用分拆成一个个功能明确的模块，提高复用性。（Ren）**
+  - **都支持native源生的方案，react的RN（reactNative）和vue的weex；（Ren）**
 
-**不同之处 ：**
+  **不同之处 ：**
+  **1）数据流**
+  **Vue默认支持数据双向绑定，而React一直提倡单向数据流**
+  **2）虚拟DOM**
+  **Vue2.x开始引入"Virtual DOM"，消除了和React在这方面的差异，但是在具体的细节还是有各自的特点。**
 
-**1）数据流**
+  - **Vue宣称可以更快地计算出Virtual DOM的差异，这是由于它在渲染过程中，会跟踪每一个组件的依赖关系，不需要重新渲染整个组件树。**
+  - **对于React而言，每当应用的状态被改变时，全部子组件都会重新渲染。当然，这可以通过 PureComponent/shouldComponentUpdate这个生命周期方法来进行控制，但Vue将此视为默认的优化。**
 
-**Vue默认支持数据双向绑定，而React一直提倡单向数据流**
+  **3）组件化**
+  **React与Vue最大的不同是模板的编写。**
 
-**2）虚拟DOM**
+  - **Vue鼓励写近似常规HTML的模板。写起来很接近标准 HTML元素，只是多了一些属性。**
+  - **React推荐你所有的模板通用JavaScript的语法扩展——JSX书写。**
 
-**Vue2.x开始引入"Virtual DOM"，消除了和React在这方面的差异，但是在具体的细节还是有各自的特点。**
+  **具体来讲：React中render函数是支持闭包特性的，所以import的组件在render中可以直接调用。但是在Vue中，由于模板中使用的数据都必须挂在 this 上进行一次中转，所以import 一个组件完了之后，还需要在 components 中再声明下。**
+  **4）监听数据变化的实现原理不同**
 
-- **Vue宣称可以更快地计算出Virtual DOM的差异，这是由于它在渲染过程中，会跟踪每一个组件的依赖关系，不需要重新渲染整个组件树。**
-- **对于React而言，每当应用的状态被改变时，全部子组件都会重新渲染。当然，这可以通过 PureComponent/shouldComponentUpdate这个生命周期方法来进行控制，但Vue将此视为默认的优化。**
+  - **Vue 通过 getter/setter 以及一些函数的劫持，能精确知道数据变化，不需要特别的优化就能达到很好的性能**
+  - **React 默认是通过比较引用的方式进行的，如果不优化（PureComponent/shouldComponentUpdate）可能导致大量不必要的vDOM的重新渲染。这是因为 Vue 使用的是可变数据，而React更强调数据的不可变。**
 
-**3）组件化**
+  **5）高阶组件**
+  **react可以通过高阶组件（HOC）来扩展，而Vue需要通过mixins来扩展。**
+  **高阶组件就是高阶函数，而React的组件本身就是纯粹的函数，所以高阶函数对React来说易如反掌。相反Vue.js使用HTML模板创建视图组件，这时模板无法有效的编译，因此Vue不能采用HOC来实现。**
+  **6）构建工具**
+  **两者都有自己的构建工具：**
 
-**React与Vue最大的不同是模板的编写。**
+  - **React ==> Create React APP**
+  - **Vue ==> vue-cli**
 
-- **Vue鼓励写近似常规HTML的模板。写起来很接近标准 HTML元素，只是多了一些属性。**
-- **React推荐你所有的模板通用JavaScript的语法扩展——JSX书写。**
+  **7）跨平台**
 
-**具体来讲：React中render函数是支持闭包特性的，所以import的组件在render中可以直接调用。但是在Vue中，由于模板中使用的数据都必须挂在 this 上进行一次中转，所以import 一个组件完了之后，还需要在 components 中再声明下。**
-
-**4）监听数据变化的实现原理不同**
-
-- **Vue 通过 getter/setter 以及一些函数的劫持，能精确知道数据变化，不需要特别的优化就能达到很好的性能**
-- **React 默认是通过比较引用的方式进行的，如果不优化（PureComponent/shouldComponentUpdate）可能导致大量不必要的vDOM的重新渲染。这是因为 Vue 使用的是可变数据，而React更强调数据的不可变。**
-
-**5）高阶组件**
-
-**react可以通过高阶组件（HOC）来扩展，而Vue需要通过mixins来扩展。**
-
-**高阶组件就是高阶函数，而React的组件本身就是纯粹的函数，所以高阶函数对React来说易如反掌。相反Vue.js使用HTML模板创建视图组件，这时模板无法有效的编译，因此Vue不能采用HOC来实现。**
-
-**6）构建工具**
-
-**两者都有自己的构建工具：**
-
-- **React ==> Create React APP**
-- **Vue ==> vue-cli**
-
-**7）跨平台**
-
-- **React ==> React Native**
-- **Vue ==> Weex**
+  - **React ==> React Native**
+  - **Vue ==> Weex**
 
 ## 27. Vue的优点
 
-- **轻量级框架：只关注视图层，是一个构建数据的视图集合，大小只有几十** **kb****；**
+- **轻量级框架：只关注视图层，是一个构建数据的视图集合，大小只有几十 kb；**
 - **简单易学：国人开发，中文文档，不存在语言障碍 ，易于理解和学习；**
-- **双向数据绑定：保留了** **angular****的特点，在数据操作方面更为简单；**
-- **组件化：保留了** **react****的优点，实现了** **html****的封装和重用，在构建单页面应用方面有着独特的优势；**
+- **双向数据绑定：保留了 angular的特点，在数据操作方面更为简单；**
+- **组件化：保留了 react的优点，实现了 html的封装和重用，在构建单页面应用方面有着独特的优势；**
 - **视图，数据，结构分离：使数据的更改更为简单，不需要进行逻辑代码的修改，只需要操作数据就能完成相关操作；**
-- **虚拟DOM：****dom** **操作是非常耗费性能的，不再使用原生的** **dom****操作节点，极大解放** **dom****操作，但具体操作的还是** **dom****不过是换了另一种方式；**
-- **运行速度更快：相比较于** **react****而言，同样是操作虚拟** **dom****，就性能而言，** **vue****存在很大的优势。**
+- **虚拟DOM：dom 操作是非常耗费性能的，不再使用原生的 dom操作节点，极大解放 dom操作，但具体操作的还是 dom不过是换了另一种方式；**
+- **运行速度更快：相比较于 react而言，同样是操作虚拟 dom，就性能而言， vue存在很大的优势。**
 
 ## 28. assets和static的区别
 
-**相同点：****assets** **和** **static** **两个都是存放静态资源文件。项目中所需要的资源文件图片，字体图标，样式文件等都可以放在这两个文件下，这是相同点**
-
-**不相同点：****assets** **中存放的静态资源文件在项目打包时，也就是运行** **npm run build** **时会将** **assets** **中放置的静态资源文件进行打包上传，所谓打包简单点可以理解为压缩体积，代码格式化。而压缩后的静态资源文件最终也都会放置在** **static** **文件中跟着** **index.html** **一同上传至服务器。****static** **中放置的静态资源文件就不会要走打包压缩格式化等流程，而是直接进入打包好的目录，直接上传至服务器。因为避免了压缩直接进行上传，在打包时会提高一定的效率，但是** **static** **中的资源文件由于没有进行压缩等操作，所以文件的体积也就相对于** **assets** **中打包后的文件提交较大点。在服务器中就会占据更大的空间。**
-
-**建议：** **将项目中** **template****需要的样式文件js文件等都可以放置在** **assets** **中，走打包这一流程。减少体积。而项目中引入的第三方的资源文件如** **iconfoont.css** **等文件可以放置在** **static** **中，因为这些引入的第三方文件已经经过处理，不再需要处理，直接上传。**
+**相同点：assets 和 static 两个都是存放静态资源文件。项目中所需要的资源文件图片，字体图标，样式文件等都可以放在这两个文件下，这是相同点**
+**不相同点：assets 中存放的静态资源文件在项目打包时，也就是运行 npm run build 时会将 assets 中放置的静态资源文件进行打包上传，所谓打包简单点可以理解为压缩体积，代码格式化。而压缩后的静态资源文件最终也都会放置在 static 文件中跟着 index.html 一同上传至服务器。static 中放置的静态资源文件就不会要走打包压缩格式化等流程，而是直接进入打包好的目录，直接上传至服务器。因为避免了压缩直接进行上传，在打包时会提高一定的效率，但是 static 中的资源文件由于没有进行压缩等操作，所以文件的体积也就相对于 assets 中打包后的文件提交较大点。在服务器中就会占据更大的空间。**
+**建议： 将项目中 template需要的样式文件js文件等都可以放置在 assets 中，走打包这一流程。减少体积。而项目中引入的第三方的资源文件如 iconfoont.css 等文件可以放置在 static 中，因为这些引入的第三方文件已经经过处理，不再需要处理，直接上传。**
 
 ## 29. delete和Vue.delete删除数组的区别
 
-- **delete****只是被删除的元素变成了** **empty/undefined** **其他的元素的键值还是不变。**
-- **Vue.delete** **直接删除了数组 改变了数组的键值。**
+- **delete只是被删除的元素变成了 empty/undefined 其他的元素的键值还是不变。**
+- **Vue.delete 直接删除了数组 改变了数组的键值。**
 
 ## 30. vue如何监听对象或者数组某个属性的变化
 
-**当在项目中直接设置数组的某一项的值，或者直接设置对象的某个属性值，这个时候，你会发现页面并没有更新。这是因为Object.defineProperty()限制，监听不到变化。**
-
-**解决方式：**
-
-- **this.$set(你要改变的数组/对象，你要改变的位置/key，你要改成什么value)**
+- **当在项目中直接设置数组的某一项的值，或者直接设置对象的某个属性值，这个时候，你会发现页面并没有更新。这是因为Object.defineProperty()限制，监听不到变化。**
+  **解决方式：**
+  - **this.$set(你要改变的数组/对象，你要改变的位置/key，你要改成什么value)**
 
 ```js
 this.$set(this.arr, 0, "OBKoro1"); // 改变数组
@@ -1156,28 +1138,24 @@ this.$set(this.obj, "c", "OBKoro1"); // 改变对象
 - **调用以下几个数组的方法**
 
 splice()、 push()、pop()、shift()、unshift()、sort()、reverse()
-
 **vue源码里缓存了array的原型链，然后重写了这几个方法，触发这几个方法的时候会observer数据，意思是使用这些方法不用再进行额外的操作，视图自动进行更新。 推荐使用splice方法会比较好自定义,因为splice可以在数组的任何位置进行删除/添加操作**
-
-**vm.****$set** **的实现原理是：**
+**vm.$set 的实现原理是：**
 
 - **如果目标是数组，直接使用数组的 splice 方法触发相应式；**
 - **如果目标是对象，会先判读属性是否存在、对象是否是响应式，最终如果要对属性进行响应式处理，则是通过调用 defineReactive 方法进行响应式处理（ defineReactive 方法就是 Vue 在初始化对象时，给对象属性采用 Object.defineProperty 动态添加 getter 和 setter 的功能所调用的方法）**
 
 ## 31.   Vue模版编译原理
 
-**vue中的模板template无法被浏览器解析并渲染，因为这不属于浏览器的标准，不是正确的HTML语法，所有需要将template转化成一个JavaScript函数，这样浏览器就可以执行这一个函数并渲染出对应的HTML元素，就可以让视图跑起来了，这一个转化的过程，就成为模板编译。模板编译又分三个阶段，解析parse，优化optimize，生成generate，最终生成可执行函数render。**
+- **vue中的模板template无法被浏览器解析并渲染，因为这不属于浏览器的标准，不是正确的HTML语法，所有需要将template转化成一个JavaScript函数，这样浏览器就可以执行这一个函数并渲染出对应的HTML元素，就可以让视图跑起来了，这一个转化的过程，就成为模板编译。模板编译又分三个阶段，解析parse，优化optimize，生成generate，最终生成可执行函数render。**
 
-- **解析阶段****：使用大量的正则表达式对template字符串进行解析，将标签、指令、属性等转化为抽象语法树AST。**
-- **优化阶段****：遍历AST，找到其中的一些静态节点并进行标记，方便在页面重渲染的时候进行diff比较时，直接跳过这一些静态节点，优化runtime的性能。**
-- **生成阶段：将最终的AST转化为render函数字符串。**
+  - **解析阶段：使用大量的正则表达式对template字符串进行解析，将标签、指令、属性等转化为抽象语法树AST。**
+  - **优化阶段：遍历AST，找到其中的一些静态节点并进行标记，方便在页面重渲染的时候进行diff比较时，直接跳过这一些静态节点，优化runtime的性能。**
+  - **生成阶段：将最终的AST转化为render函数字符串。**
 
 ## 32.  对keep-alive的理解，它是如何实现的，具体缓存的是什么？
 
 如果需要在组件切换的时候，保存一些组件的状态防止多次渲染，就可以使用 keep-alive 组件包裹需要保存的组件。
-
 **（1）keep-alive**
-
 **keep-alive有以下三个属性：**
 
 - **include 字符串或正则表达式，只有名称匹配的组件会被匹配；**
@@ -1185,7 +1163,6 @@ splice()、 push()、pop()、shift()、unshift()、sort()、reverse()
 - **max 数字，最多可以缓存多少组件实例。**
 
 **注意：keep-alive 包裹动态组件时，会缓存不活动的组件实例。**
-
 **主要流程**
 
 1. **判断组件 name ，不在 include 或者在 exclude 中，直接返回 vnode，说明该组件不被缓存。**
@@ -1314,21 +1291,17 @@ render () {
 1. **获取 keep-alive 下第一个子组件的实例对象，通过他去获取这个组件的组件名**
 2. **通过当前组件名去匹配原来 include 和 exclude，判断当前组件是否需要缓存，不需要缓存，直接返回当前组件的实例vNode**
 3. **需要缓存，判断他当前是否在缓存数组里面：**
-
-- **存在，则将他原来位置上的 key 给移除，同时将这个组件的 key 放到数组最后面（LRU）**
-- **不存在，将组件 key 放入数组，然后判断当前 key数组是否超过 max 所设置的范围，超过，那么削减未使用时间最长的一个组件的 key**
-
-1. **最后将这个组件的 keepAlive 设置为 true**
+   - **存在，则将他原来位置上的 key 给移除，同时将这个组件的 key 放到数组最后面（LRU）**
+   - **不存在，将组件 key 放入数组，然后判断当前 key数组是否超过 max 所设置的范围，超过，那么削减未使用时间最长的一个组件的 key**
+4. **最后将这个组件的 keepAlive 设置为 true**
 
 **（3）keep-alive 本身的创建过程和 patch 过程**
-
 **缓存渲染的时候，会根据 vnode.componentInstance（首次渲染 vnode.componentInstance 为 undefined） 和 keepAlive 属性判断不会执行组件的 created、mounted 等钩子函数，而是对缓存的组件执行 patch 过程∶ 直接把缓存的 DOM 对象直接插入到目标元素中，完成了数据更新的情况下的渲染过程。**
-
 **首次渲染**
 
 - **组件的首次渲染∶判断组件的 abstract 属性，才往父组件里面挂载 DOM**
 
-```plain
+```js
 // core/instance/lifecycle
 function initLifecycle (vm: Component) {
   const options = vm.$options
@@ -1380,17 +1353,14 @@ init (vnode: VNodeWithData, hydrating: boolean): ?boolean {
   },
 ```
 
-**prepatch 操作就不会在执行组件的 mounted 和 created 生命周期函数，而是直接将 DOM 插入**
+- **prepatch 操作就不会在执行组件的 mounted 和 created 生命周期函数，而是直接将 DOM 插入**
+  **（4）LRU （least recently used）缓存策略**
+  **LRU 缓存策略∶ 从内存中找出最久未使用的数据并置换新的数据。**
+  **LRU（Least rencently used）算法根据数据的历史访问记录来进行淘汰数据，其核心思想是"如果数据最近被访问过，那么将来被访问的几率也更高"。 最常见的实现是使用一个链表保存缓存数据，详细算法实现如下∶**
 
-**（4）LRU （least recently used）缓存策略**
-
-**LRU 缓存策略∶ 从内存中找出最久未使用的数据并置换新的数据。**
-
-**LRU（Least rencently used）算法根据数据的历史访问记录来进行淘汰数据，其核心思想是****"如果数据最近被访问过，那么将来被访问的几率也更高"****。 最常见的实现是使用一个链表保存缓存数据，详细算法实现如下∶**
-
-- **新数据插入到链表头部**
-- **每当缓存命中（即缓存数据被访问），则将数据移到链表头部**
-- **链表满的时候，将链表尾部的数据丢弃。**
+  - **新数据插入到链表头部**
+  - **每当缓存命中（即缓存数据被访问），则将数据移到链表头部**
+  - **链表满的时候，将链表尾部的数据丢弃。**
 
 ## 33.Vue中封装的数组方法有哪些，其如何实现页面更新
 
@@ -1449,22 +1419,22 @@ methodsToPatch.forEach(function(method) {
 });
 ```
 
-**简单来说就是，重写了数组中的那些原生方法，首先获取到这个数组的ob，也就是它的Observer对象，如果有新的值，就调用observeArray继续对新的值观察变化（也就是通过** **target__proto__ == arrayMethods****来改变了数组实例的型），然后手动调用notify，通知渲染watcher，执行update。**
+**简单来说就是，重写了数组中的那些原生方法，首先获取到这个数组的ob，也就是它的Observer对象，如果有新的值，就调用observeArray继续对新的值观察变化（也就是通过 target__proto__ == arrayMethods来改变了数组实例的型），然后手动调用notify，通知渲染watcher，执行update。**
 
 ## 34.说一下Vue的生命周期
 
 **Vue 实例有⼀个完整的⽣命周期，也就是从开始创建、初始化数据、编译模版、挂载Dom -> 渲染、更新 -> 渲染、卸载 等⼀系列过程，称这是Vue的⽣命周期。**
 
-1. **beforeCreate（创建前）****：数据观测和初始化事件还未开始，此时 data 的响应式追踪、event/watcher 都还没有被设置，也就是说不能访问到data、computed、watch、methods上的方法和数据。**
-2. **created（创建后）****：实例创建完成，实例上配置的 options 包括 data、computed、watch、methods 等都配置完成，但是此时渲染得节点还未挂载到 DOM，所以不能访问到** **$el** **属性。**
-3. **beforeMount（挂载前）****：在挂载开始之前被调用，相关的render函数首次被调用。实例已完成以下的配置：编译模板，把data里面的数据和模板生成html。此时还没有挂载html到页面上。**
-4. **mounted（挂载后）****：在el被新创建的 vm.$el 替换，并挂载到实例上去之后调用。实例已完成以下的配置：用上面编译好的html内容替换el属性指向的DOM对象。完成模板中的html渲染到html 页面中。此过程中进行ajax交互。**
-5. **beforeUpdate（更新前）****：响应式数据更新时调用，此时虽然响应式数据更新了，但是对应的真实 DOM 还没有被渲染。**
-6. **updated（更新后）** **：在由于数据更改导致的虚拟DOM重新渲染和打补丁之后调用。此时 DOM 已经根据响应式数据的变化更新了。调用时，组件 DOM已经更新，所以可以执行依赖于DOM的操作。然而在大多数情况下，应该避免在此期间更改状态，因为这可能会导致更新无限循环。该钩子在服务器端渲染期间不被调用。**
-7. **beforeDestroy（销毁前）****：实例销毁之前调用。这一步，实例仍然完全可用，****this****仍能获取到实例。**
-8. **destroyed（销毁后）****：实例销毁后调用，调用后，Vue 实例指示的所有东西都会解绑定，所有的事件监听器会被移除，所有的子实例也会被销毁。该钩子在服务端渲染期间不被调用。**
+1. **beforeCreate（创建前）：数据观测和初始化事件还未开始，此时 data 的响应式追踪、event/watcher 都还没有被设置，也就是说不能访问到data、computed、watch、methods上的方法和数据。**
+2. **created（创建后）：实例创建完成，实例上配置的 options 包括 data、computed、watch、methods 等都配置完成，但是此时渲染得节点还未挂载到 DOM，所以不能访问到 $el 属性。**
+3. **beforeMount（挂载前）：在挂载开始之前被调用，相关的render函数首次被调用。实例已完成以下的配置：编译模板，把data里面的数据和模板生成html。此时还没有挂载html到页面上。**
+4. **mounted（挂载后）：在el被新创建的 vm.$el 替换，并挂载到实例上去之后调用。实例已完成以下的配置：用上面编译好的html内容替换el属性指向的DOM对象。完成模板中的html渲染到html 页面中。此过程中进行ajax交互。**
+5. **beforeUpdate（更新前）：响应式数据更新时调用，此时虽然响应式数据更新了，但是对应的真实 DOM 还没有被渲染。**
+6. **updated（更新后） ：在由于数据更改导致的虚拟DOM重新渲染和打补丁之后调用。此时 DOM 已经根据响应式数据的变化更新了。调用时，组件 DOM已经更新，所以可以执行依赖于DOM的操作。然而在大多数情况下，应该避免在此期间更改状态，因为这可能会导致更新无限循环。该钩子在服务器端渲染期间不被调用。**
+7. **beforeDestroy（销毁前）：实例销毁之前调用。这一步，实例仍然完全可用，this仍能获取到实例。**
+8. **destroyed（销毁后）：实例销毁后调用，调用后，Vue 实例指示的所有东西都会解绑定，所有的事件监听器会被移除，所有的子实例也会被销毁。该钩子在服务端渲染期间不被调用。**
 
-**另外还有** **keep-alive** **独有的生命周期，分别为** **activated** **和** **deactivated** **。用** **keep-alive** **包裹的组件在切换时不会进行销毁，而是缓存到内存中并执行** **deactivated** **钩子函数，命中缓存渲染后会执行** **activated** **钩子函数。**
+**另外还有 keep-alive 独有的生命周期，分别为 activated 和 deactivated 。用 keep-alive 包裹的组件在切换时不会进行销毁，而是缓存到内存中并执行 deactivated 钩子函数，命中缓存渲染后会执行 activated 钩子函数。**
 
 ## 35.Vue 子组件和父组件执行顺序
 
@@ -1622,17 +1592,15 @@ const router = new Router({
 
 https://juejin.cn/post/7116336664540086286
 
-**Vue-Router有两种模式：****hash模式****和****history模式****。默认的路由模式是hash模式。**
+**Vue-Router有两种模式：hash模式和history模式。默认的路由模式是hash模式。**
 
 #### 1. hash模式
 
-**简介：** **hash模式是开发中默认的模式，它的URL带着一个#，例如：**http://www.abc.com/#/vue**，它的hash值就是** **#/vue****。**
+**简介： hash模式是开发中默认的模式，它的URL带着一个#，例如：**[http://www.abc.com/#/vue](http://www.abc.com/#/vue)**，它的hash值就是 #/vue。**
+**特点：hash值会出现在URL里面，但是不会出现在HTTP请求中，对后端完全没有影响。所以改变hash值，不会重新加载页面。这种模式的浏览器支持度很好，低版本的IE浏览器也支持这种模式。hash路由被称为是前端路由，已经成为SPA（单页面应用）的标配。**
+**原理： hash模式的主要原理就是onhashchange()事件：**
 
-**特点****：hash值会出现在URL里面，但是不会出现在HTTP请求中，对后端完全没有影响。所以改变hash值，不会重新加载页面。这种模式的浏览器支持度很好，低版本的IE浏览器也支持这种模式。hash路由被称为是前端路由，已经成为SPA（单页面应用）的标配。**
-
-**原理：** **hash模式的主要原理就是****onhashchange()事件****：**
-
-```plain
+```js
 window.onhashchange = function(event){
     console.log(event.oldURL, event.newURL);
     let hash = location.hash.slice(1);
@@ -1643,17 +1611,14 @@ window.onhashchange = function(event){
 
 #### 2. history模式
 
-**简介：** **history模式的URL中没有#，它使用的是传统的路由分发模式，即用户在输入一个URL时，服务器会接收这个请求，并解析这个URL，然后做出相应的逻辑处理。**
+**简介： history模式的URL中没有#，它使用的是传统的路由分发模式，即用户在输入一个URL时，服务器会接收这个请求，并解析这个URL，然后做出相应的逻辑处理。**
+**特点： 当使用history模式时，URL就像这样：**[http://abc.com/user/id](http://abc.com/user/id)**。相比hash模式更加好看。但是，history模式需要后台配置支持。如果后台没有正确配置，访问时会返回404。**
+**API： history api可以分为两大部分，切换历史状态和修改历史状态：**
 
-**特点：** **当使用history模式时，URL就像这样：**http://abc.com/user/id**。相比hash模式更加好看。但是，history模式需要后台配置支持。如果后台没有正确配置，访问时会返回404。**
-
-**API：** **history api可以分为两大部分，切换历史状态和修改历史状态：**
-
-- **修改历史状态****：包括了 HTML5 History Interface 中新增的** **pushState()** **和** **replaceState()** **方法，这两个方法应用于浏览器的历史记录栈，提供了对历史记录进行修改的功能。只是当他们进行修改时，虽然修改了url，但浏览器不会立即向后端发送请求。如果要做到改变url但又不刷新页面的效果，就需要前端用上这两个API。**
-- **切换历史状态： 包括** **forward()****、****back()****、****go()****三个方法，对应浏览器的前进，后退，跳转操作。**是当它们执行修改时，虽然改变了当前的 URL，但浏览器不会向后端发送请求。
+- **修改历史状态：包括了 HTML5 History Interface 中新增的 pushState() 和 replaceState() 方法，这两个方法应用于浏览器的历史记录栈，提供了对历史记录进行修改的功能。只是当他们进行修改时，虽然修改了url，但浏览器不会立即向后端发送请求。如果要做到改变url但又不刷新页面的效果，就需要前端用上这两个API。**
+- **切换历史状态： 包括 forward()、back()、go()三个方法，对应浏览器的前进，后退，跳转操作。**是当它们执行修改时，虽然改变了当前的 URL，但浏览器不会向后端发送请求。
 
 **虽然history模式丢弃了丑陋的#。但是，它也有自己的缺点，就是在刷新页面的时候，如果没有相应的路由或资源，就会刷出404来。**
-
 **如果想要切换到history模式，就要进行以下配置（后端也要进行配置）：**
 
 ```js
@@ -1705,7 +1670,7 @@ Vue Router的History模式相比于默认的Hash模式来说，能够更好地�
 
 **（1）监听$route的变化**
 
-```plain
+```js
 // 监听,当路由发生变化的时候执行
 watch: {
   $route: {
@@ -1731,9 +1696,9 @@ watch: {
 
 **（1）param方式**
 
-- **配置路由格式：****/router/:id**
+- **配置路由格式：/router/:id**
 - **传递的方式：在path后面跟上对应的值**
-- **传递后形成的路径：****/router/123**
+- **传递后形成的路径：/router/123**
 
 **1）路由定义**
 
@@ -1762,14 +1727,12 @@ this.$router.push('/user/' + wade)
 ```
 
 **3）参数获取**
-
-**通过** **$route.params.userid** **获取传递的值**
-
+**通过 $route.params.userid 获取传递的值**
 **（2）query方式**
 
-- **配置路由格式：****/router****，也就是普通配置**
+- **配置路由格式：/router，也就是普通配置**
 - **传递的方式：对象中使用query的key作为传递方式**
-- **传递后形成的路径：****/route?id=123**
+- **传递后形成的路径：/route?id=123**
 
 **1）路由定义**
 
@@ -1818,9 +1781,7 @@ this.$router.push('/user?uname=' + jsmes)
 ## 45.Vue-router 路由钩子在生命周期的体现
 
 **一、Vue-Router导航守卫**
-
 **有的时候，需要通过路由来进行一些操作，比如最常见的登录权限验证，当用户满足条件时，才让其进入导航，否则就取消跳转，并跳到登录页面让其登录。**
-
 **为此有很多种方法可以植入路由的导航过程：全局的，单个路由独享的，或者组件级的**
 
 1. **全局路由钩子**
@@ -1960,17 +1921,15 @@ beforeRouteEnter(to, from, next) {
 
 ## 46.Vue-router跳转和location.href有什么区别
 
-- **使用** **location.href= /url** **来跳转，简单方便，但是刷新了页面；**
-- **使用** **history.pushState( /url )** **，无刷新页面，静态跳转；**
-- **引进 router ，然后使用** **router.push( /url )** **来跳转，使用了** **diff****算法，实现了按需加载，减少了 dom 的消耗。其实使用 router 跳转和使用** **history.pushState()** **没什么差别的，因为vue-router就是用了** **history.pushState()** **，尤其是在history模式下。**
+- **使用 location.href= /url 来跳转，简单方便，但是刷新了页面；**
+- **使用 history.pushState( /url ) ，无刷新页面，静态跳转；**
+- **引进 router ，然后使用 router.push( /url ) 来跳转，使用了 diff算法，实现了按需加载，减少了 dom 的消耗。其实使用 router 跳转和使用 history.pushState() 没什么差别的，因为vue-router就是用了 history.pushState() ，尤其是在history模式下。**
 
 ## 47.params和query的区别
 
-**用法****：query要用path来引入，params要用name来引入，接收参数都是类似的，分别是** **this.$route.query.name** **和** **this.$route.params.name** **。**
-
-**url地址显示****：query更加类似于ajax中get传参，params则类似于post，说的再简单一点，前者在浏览器地址栏中显示参数，后者则不显示**
-
-**注意****：query刷新不会丢失query里面的数据 params刷新会丢失 params里面的数据。**
+**用法：query要用path来引入，params要用name来引入，接收参数都是类似的，分别是 this.$route.query.name 和 this.$route.params.name 。**
+**url地址显示：query更加类似于ajax中get传参，params则类似于post，说的再简单一点，前者在浏览器地址栏中显示参数，后者则不显示**
+**注意：query刷新不会丢失query里面的数据 params刷新会丢失 params里面的数据。**
 
 ## 48.Vue-router 导航守卫有哪些
 
@@ -2054,19 +2013,19 @@ Vuex的核心概念包括：state、mutations、actionsi和getters。.其中，s
 
 **（2）各模块在核心流程中的主要功能：**
 
-- **Vue Components****∶ Vue组件。HTML页面上，负责接收用户操作等交互行为，执行dispatch方法触发对应action进行回应。**
-- **dispatch****∶操作行为触发方法，是唯一能执行action的方法。**
-- **actions****∶ 操作行为处理模块。负责处理Vue Components接收到的所有交互行为。包含同步/异步操作，支持多个同名方法，按照注册的顺序依次触发。向后台API请求的操作就在这个模块中进行，包括触发其他action以及提交mutation的操作。该模块提供了Promise的封装，以支持action的链式触发。**
-- **commit****∶状态改变提交操作方法。对mutation进行提交，是唯一能执行mutation的方法。**
-- **mutations****∶状态改变操作方法。是Vuex修改state的唯一推荐方法，其他修改方式在严格模式下将会报错。该方法只能进行同步操作，且方法名只能全局唯一。操作之中会有一些hook暴露出来，以进行state的监控等。**
-- **state****∶ 页面状态管理容器对象。集中存储Vuecomponents中data对象的零散数据，全局唯一，以进行统一的状态管理。页面显示所需的数据从该对象中进行读取，利用Vue的细粒度数据响应机制来进行高效的状态更新。**
-- **getters****∶ state对象读取方法。图中没有单独列出该模块，应该被包含在了render中，Vue Components通过该方法读取全局state对象。**
+- **Vue Components∶ Vue组件。HTML页面上，负责接收用户操作等交互行为，执行dispatch方法触发对应action进行回应。**
+- **dispatch∶操作行为触发方法，是唯一能执行action的方法。**
+- **actions∶ 操作行为处理模块。负责处理Vue Components接收到的所有交互行为。包含同步/异步操作，支持多个同名方法，按照注册的顺序依次触发。向后台API请求的操作就在这个模块中进行，包括触发其他action以及提交mutation的操作。该模块提供了Promise的封装，以支持action的链式触发。**
+- **commit∶状态改变提交操作方法。对mutation进行提交，是唯一能执行mutation的方法。**
+- **mutations∶状态改变操作方法。是Vuex修改state的唯一推荐方法，其他修改方式在严格模式下将会报错。该方法只能进行同步操作，且方法名只能全局唯一。操作之中会有一些hook暴露出来，以进行state的监控等。**
+- **state∶ 页面状态管理容器对象。集中存储Vuecomponents中data对象的零散数据，全局唯一，以进行统一的状态管理。页面显示所需的数据从该对象中进行读取，利用Vue的细粒度数据响应机制来进行高效的状态更新。**
+- **getters∶ state对象读取方法。图中没有单独列出该模块，应该被包含在了render中，Vue Components通过该方法读取全局state对象。**
 
 ## 50.Vuex中action和mutation的区别
 
 **mutation中的操作是一系列的同步函数，用于修改state中的变量的的状态。当使用vuex时需要通过commit来提交需要操作的内容。mutation 非常类似于事件：每个 mutation 都有一个字符串的 事件类型 (type) 和 一个 回调函数 (handler)。这个回调函数就是实际进行状态更改的地方，并且它会接受 state 作为第一个参数：**
 
-```plain
+```js
 const store = new Vuex.Store({
   state: {
     count: 1
@@ -2088,7 +2047,7 @@ store.commit('increment')
 - **Action 可以包含任意异步操作。**
 - **Action 提交的是 mutation，而不是直接变更状态。**
 
-```plain
+```js
 const store = new Vuex.Store({
   state: {
     count: 0
@@ -2106,14 +2065,13 @@ const store = new Vuex.Store({
 })
 ```
 
-**Action 函数接受一个与 store 实例具有相同方法和属性的 context 对象，因此你可以调用 context.commit 提交一个 mutation，或者通过 context.state 和 context.getters 来获取 state 和 getters。**
+- **Action 函数接受一个与 store 实例具有相同方法和属性的 context 对象，因此你可以调用 context.commit 提交一个 mutation，或者通过 context.state 和 context.getters 来获取 state 和 getters。**
+  **所以，两者的不同点如下：**
 
-**所以，两者的不同点如下：**
-
-- **Mutation专注于修改State，理论上是修改State的唯一途径；Action业务代码、异步请求。**
-- **Mutation：必须同步执行；Action：可以异步，但不能直接操作State。**
-- **在视图更新时，先触发actions，actions再触发mutation**
-- **mutation的参数是state，它包含store中的数据；****actions****的参数是context，它是 state 的父级，包含 state、getters**
+  - **Mutation专注于修改State，理论上是修改State的唯一途径；Action业务代码、异步请求。**
+  - **Mutation：必须同步执行；Action：可以异步，但不能直接操作State。**
+  - **在视图更新时，先触发actions，actions再触发mutation**
+  - **mutation的参数是state，它包含store中的数据；actions的参数是context，它是 state 的父级，包含 state、getters**
 
 ## 51.Vuex 和 localStorage 的区别
 
@@ -2131,8 +2089,7 @@ const store = new Vuex.Store({
 **（3）永久性**
 
 **刷新页面时vuex存储的值会丢失，localstorage不会。**
-
-**注意****：对于不变的数据确实可以用localstorage可以代替vuex，但是当两个组件共用一个数据源（对象或数组）时，如果其中一个组件改变了该数据源，希望另一个组件响应该变化时，localstorage无法做到，原因就是区别1。**
+**注意：对于不变的数据确实可以用localstorage可以代替vuex，但是当两个组件共用一个数据源（对象或数组）时，如果其中一个组件改变了该数据源，希望另一个组件响应该变化时，localstorage无法做到，原因就是区别1。**
 
 ## 52.Redux 和 Vuex 有什么区别，它们的共同思想
 
@@ -2178,7 +2135,7 @@ const store = new Vuex.Store({
 
 ## 56.为什么 Vuex 的 mutation 中不能做异步操作？
 
-- **Vuex中所有的状态更新的唯一途径都是mutation，异步操作通过 Action 来提交 mutation实现，这样可以方便地跟踪每一个状态的变化，****有利于我们调试和维护****。**
+- **Vuex中所有的状态更新的唯一途径都是mutation，异步操作通过 Action 来提交 mutation实现，这样可以方便地跟踪每一个状态的变化，有利于我们调试和维护。**
 - **每个mutation执行完成后都会对应到一个新的状态变更，这样devtools就可以打个快照存下来，然后就可以实现 time-travel 了。如果mutation支持异步操作，就没有办法知道状态是何时更新的，无法很好的进行状态的追踪，给调试带来困难。**
 
 ## 57.Vuex的严格模式是什么,有什么作用，如何开启
@@ -2187,7 +2144,7 @@ const store = new Vuex.Store({
 
 **在Vuex.Store 构造器选项中开启,如下**
 
-```plain
+```js
 const store = new Vuex.Store({
     strict:true,
 })
@@ -2197,7 +2154,7 @@ const store = new Vuex.Store({
 
 **使用mapGetters辅助函数, 利用对象展开运算符将getter混入computed 对象中**
 
-```plain
+```js
 import {mapGetters} from 'vuex'
 export default{
     computed:{
@@ -2212,7 +2169,7 @@ export default{
 
 **使用mapMutations辅助函数,在组件中这么使用**
 
-```plain
+```js
 import { mapMutations } from 'vuex'
 methods:{
     ...mapMutations({
@@ -2221,22 +2178,20 @@ methods:{
 }
 ```
 
-**然后调用** **this.setNumber(10)****相当调用** **this.$store.commit('SET_NUMBER',10)**
+**然后调用 this.setNumber(10)相当调用 this.$store.commit('SET_NUMBER',10)**
 
 
 
 ## 60.defineProperty和proxy的区别
 
 **Vue 在实例初始化时遍历 data 中的所有属性，并使用 Object.defineProperty 把这些属性全部转为 getter/setter。这样当追踪数据发生变化时，setter 会被自动调用。**
-
 **Object.defineProperty 是 ES5 中一个无法 shim 的特性，这也就是 Vue 不支持 IE8 以及更低版本浏览器的原因。**
-
 **但是这样做有以下问题：**
 
-1. **添加或删除对象的属性时，Vue 检测不到。因为添加或删除的对象没有在初始化进行响应式处理，只能通过** **$set** **来调用** **Object.defineProperty()****处理。**
+1. **添加或删除对象的属性时，Vue 检测不到。因为添加或删除的对象没有在初始化进行响应式处理，只能通过 $set 来调用 Object.defineProperty()处理。**
 2. **无法监控到数组下标和长度的变化。**
 
-**Vue3 使用 Proxy 来监控数据的变化。Proxy 是 ES6 中提供的功能，其作用为：用于定义基本操作的自定义行为（如属性查找，赋值，枚举，函数调用等）。相对于** **Object.defineProperty()****，其有以下特点：**
+**Vue3 使用 Proxy 来监控数据的变化。Proxy 是 ES6 中提供的功能，其作用为：用于定义基本操作的自定义行为（如属性查找，赋值，枚举，函数调用等）。相对于 Object.defineProperty()，其有以下特点：**
 
 1. **Proxy 直接代理整个对象而非对象属性，这样只需做一层代理就可以监听同级结构下的所有属性变化，包括新增属性和删除属性。**
 2. **Proxy 可以监听数组的变化。**
@@ -2280,13 +2235,13 @@ Object.defineProperty 对于数组只能在特定情况下监听，例如 push�
 **在 Vue2 中，代码是 Options API 风格的，也就是通过填充 (option) data、methods、computed 等属性来完成一个 Vue 组件。这种风格使得 Vue 相对于 React极为容易上手，同时也造成了几个问题：**
 
 1. **由于 Options API 不够灵活的开发方式，使得Vue开发缺乏优雅的方法来在组件间共用代码。**
-2. **Vue 组件过于依赖** **this****上下文，Vue 背后的一些小技巧使得 Vue 组件的开发看起来与 JavaScript 的开发原则相悖，比如在** **methods****中的** **this****竟然指向组件实例来不指向** **methods****所在的对象。这也使得 TypeScript 在Vue2 中很不好用。**
+2. **Vue 组件过于依赖 this上下文，Vue 背后的一些小技巧使得 Vue 组件的开发看起来与 JavaScript 的开发原则相悖，比如在 methods中的 this竟然指向组件实例来不指向 methods所在的对象。这也使得 TypeScript 在Vue2 中很不好用。**
 
 **于是在 Vue3 中，舍弃了 Options API，转而投向 Composition API。Composition API本质上是将 Options API 背后的机制暴露给用户直接使用，这样用户就拥有了更多的灵活性，也使得 Vue3 更适合于 TypeScript 结合。**
 
 **如下，是一个使用了 Vue Composition API 的 Vue3 组件：**
 
-```plain
+```vue
 <template>
   <button @click="increment">
     Count: {{ count }}
@@ -2338,8 +2293,6 @@ export default {
 
 
 
-
-
 ## 64.vue和react的区别
 
 1.  响应式原理不同：Vue 的响应式原理是基于 Object.defineProperty 实现的数据双向绑定，而 React 则是使用单向数据流，通过 JSX 实现 UI 的渲染。 
@@ -2352,7 +2305,9 @@ export default {
 
 ## 65.对虚拟DOM的理解？
 
-**从本质上来说，Virtual Dom是一个JavaScript对象，通过对象的方式来表示DOM结构。将页面的状态抽象为JS对象的形式，配合不同的渲染工具，使跨平台渲染成为可能。通过事务处理机制，将多次DOM修改的结果一次性的更新到页面上，从而有效的减少页面渲染的次数，减少修改DOM的重绘重排次数，提高渲染性能。**<br />**虚拟DOM是对DOM的抽象，这个对象是更加轻量级的对 DOM的描述。它设计的最初目的，就是更好的跨平台，比如Node.js就没有DOM，如果想实现SSR，那么一个方式就是借助虚拟DOM，因为虚拟DOM本身是js对象。 在代码渲染到页面之前，vue会把代码转换成一个对象（虚拟 DOM）。以对象的形式来描述真实DOM结构，最终渲染到页面。在每次数据发生变化前，虚拟DOM都会缓存一份，变化之时，现在的虚拟DOM会与缓存的虚拟DOM进行比较。在vue内部封装了diff算法，通过这个算法来进行比较，渲染时修改改变的变化，原先没有发生改变的通过原先的数据进行渲染。**<br />**另外现代前端框架的一个基本要求就是无须手动操作DOM，一方面是因为手动操作DOM无法保证程序性能，多人协作的项目中如果review不严格，可能会有开发者写出性能较低的代码，另一方面更重要的是省略手动DOM操作可以大大提高开发效率。**
+**从本质上来说，Virtual Dom是一个JavaScript对象，通过对象的方式来表示DOM结构。将页面的状态抽象为JS对象的形式，配合不同的渲染工具，使跨平台渲染成为可能。通过事务处理机制，将多次DOM修改的结果一次性的更新到页面上，从而有效的减少页面渲染的次数，减少修改DOM的重绘重排次数，提高渲染性能。**
+**虚拟DOM是对DOM的抽象，这个对象是更加轻量级的对 DOM的描述。它设计的最初目的，就是更好的跨平台，比如Node.js就没有DOM，如果想实现SSR，那么一个方式就是借助虚拟DOM，因为虚拟DOM本身是js对象。 在代码渲染到页面之前，vue会把代码转换成一个对象（虚拟 DOM）。以对象的形式来描述真实DOM结构，最终渲染到页面。在每次数据发生变化前，虚拟DOM都会缓存一份，变化之时，现在的虚拟DOM会与缓存的虚拟DOM进行比较。在vue内部封装了diff算法，通过这个算法来进行比较，渲染时修改改变的变化，原先没有发生改变的通过原先的数据进行渲染。**
+**另外现代前端框架的一个基本要求就是无须手动操作DOM，一方面是因为手动操作DOM无法保证程序性能，多人协作的项目中如果review不严格，可能会有开发者写出性能较低的代码，另一方面更重要的是省略手动DOM操作可以大大提高开发效率。**
 
 ## 66.虚拟DOM的解析过程
 
@@ -2364,12 +2319,18 @@ export default {
 
 ## 67.为什么要用虚拟DOM
 
-**（1）保证性能下限，在不进行手动优化的情况下，提供过得去的性能**<br />看一下页面渲染的流程：解析HTML -> 生成DOM->生成 CSSOM->Layout->Paint->Compiler<br />下面对比一下修改DOM时真实DOM操作和Virtual DOM的过程，来看一下它们重排重绘的性能消耗∶
+**（1）保证性能下限，在不进行手动优化的情况下，提供过得去的性能**
+看一下页面渲染的流程：解析HTML -> 生成DOM->生成 CSSOM->Layout->Paint->Compiler
+下面对比一下修改DOM时真实DOM操作和Virtual DOM的过程，来看一下它们重排重绘的性能消耗∶
 
 - 真实DOM∶ 生成HTML字符串＋重建所有的DOM元素
 - 虚拟DOM∶ 生成vNode+ DOMDiff＋必要的dom更新
 
-Virtual DOM的更新DOM的准备工作耗费更多的时间，也就是JS层面，相比于更多的DOM操作它的消费是极其便宜的。尤雨溪在社区论坛中说道∶ 框架给你的保证是，你不需要手动优化的情况下，依然可以给你提供过得去的性能。<br />**（2）跨平台**<br />Virtual DOM本质上是JavaScript的对象，它可以很方便的跨平台操作，比如服务端渲染、uniapp等。<br />（3）开发效率：<br />使用虚拟 DOM，**更重要的是省略手动DOM操作可以大大提高开发效率。**
+Virtual DOM的更新DOM的准备工作耗费更多的时间，也就是JS层面，相比于更多的DOM操作它的消费是极其便宜的。尤雨溪在社区论坛中说道∶ 框架给你的保证是，你不需要手动优化的情况下，依然可以给你提供过得去的性能。
+**（2）跨平台**
+Virtual DOM本质上是JavaScript的对象，它可以很方便的跨平台操作，比如服务端渲染、uniapp等。
+（3）开发效率：
+使用虚拟 DOM，**更重要的是省略手动DOM操作可以大大提高开发效率。**
 
 ## 68.虚拟DOM真的比真实DOM性能好吗
 
@@ -2421,11 +2382,307 @@ Virtual DOM的更新DOM的准备工作耗费更多的时间，也就是JS层面�
 
 Vue 框架通过数据双向绑定和虚拟 DOM 技术，帮我们处理了前端开发中最脏最累的 DOM 操作部分， 我们不再需要去考虑如何操作 DOM 以及如何最高效地操作 DOM；但 Vue 项目中仍然存在项目首屏优化、Webpack 编译配置优化等问题，所以我们仍然需要去关注 Vue 项目性能方面的优化，使项目具有更高效的性能、更好的用户体验。本文是作者通过实际项目的优化实践进行总结而来，希望读者读完本文，有一定的启发思考，从而对自己的项目进行优化起到帮助。本文内容分为以下三部分组成：
 
+### 一、代码层面的优化
+
+**1.1、v-if 和 v-show 区分使用场景**
+v-if 是 真正 的条件渲染，因为它会确保在切换过程中条件块内的事件监听器和子组件适当地被销毁和重建；也是惰性的：如果在初始渲染时条件为假，则什么也不做——直到条件第一次变为真时，才会开始渲染条件块。
+v-show 就简单得多， 不管初始条件是什么，元素总是会被渲染，并且只是简单地基于 CSS 的 display 属性进行切换。
+所以，v-if 适用于在运行时很少改变条件，不需要频繁切换条件的场景；v-show 则适用于需要非常频繁切换条件的场景。
+**1.2、computed 和 watch 区分使用场景**
+computed： 是计算属性，依赖其它属性值，并且 computed 的值有缓存，只有它依赖的属性值发生改变，下一次获取 computed 的值时才会重新计算 computed 的值；
+watch： 更多的是「观察」的作用，类似于某些数据的监听回调 ，每当监听的数据变化时都会执行回调进行后续操作；
+运用场景：
+当我们需要进行数值计算，并且依赖于其它数据时，应该使用 computed，因为可以利用 computed 的缓存特性，避免每次获取值时，都要重新计算；
+当我们需要在数据变化时执行异步或开销较大的操作时，应该使用 watch，使用 watch 选项允许我们执行异步操作 ( 访问一个 API )，限制我们执行该操作的频率，并在我们得到最终结果前，设置中间状态。这些都是计算属性无法做到的。
+**1.3、v-for 遍历必须为 item 添加 key，且避免同时使用 v-if**
+**（1）v-for 遍历必须为 item 添加 key**
+在列表数据进行遍历渲染时，需要为每一项 item 设置唯一 key 值，方便 Vue.js 内部机制精准找到该条列表数据。当 state 更新时，新的状态值和旧的状态值对比，较快地定位到 diff 。
+**（2）v-for 遍历避免同时使用 v-if**
+v-for 比 v-if 优先级高，如果每一次都需要遍历整个数组，将会影响速度，尤其是当之需要渲染很小一部分的时候，必要情况下应该替换成 computed 属性。
+**推荐：**
+
+```js
+<ul>
+  <li
+    v-for="user in activeUsers"
+    :key="user.id">
+    {{ user.name }}
+  </li>
+</ul>
+computed: {
+  activeUsers: function () {
+    return this.users.filter(function (user) {
+   return user.isActive
+    })
+  }
+}
+```
+
+**不推荐：**
+
+```js
+<ul>
+  <li
+    v-for="user in users"
+    v-if="user.isActive"
+    :key="user.id">
+    {{ user.name }}
+  </li>
+</ul>
+```
+
+**1.4、长列表性能优化**
+Vue 会通过 Object.defineProperty 对数据进行劫持，来实现视图响应数据的变化，然而有些时候我们的组件就是纯粹的数据展示，不会有任何改变，我们就不需要 Vue 来劫持我们的数据，在大量数据展示的情况下，这能够很明显的减少组件初始化的时间，那如何禁止 Vue 劫持我们的数据呢？可以通过 Object.freeze 方法来冻结一个对象，一旦被冻结的对象就再也不能被修改了。
+
+```js
+export default {
+  data: () => ({
+    users: {}
+  }),
+  async created() {
+    const users = await axios.get("/api/users");
+    this.users = Object.freeze(users);
+  }
+};
+```
+
+**1.5、事件的销毁**
+Vue 组件销毁时，会自动清理它与其它实例的连接，解绑它的全部指令及事件监听器，但是仅限于组件本身的事件。如果在 js 内
+
+```js
+created() {
+  addEventListener('click', this.click, false)
+},
+beforeDestroy() {
+  removeEventListener('click', this.click, false)
+}
+```
+
+**1.6、图片资源懒加载**
+对于图片过多的页面，为了加速页面加载速度，所以很多时候我们需要将页面内未出现在可视区域内的图片先不做加载， 等到滚动到可视区域后再去加载。这样对于页面加载性能上会有很大的提升，也提高了用户体验。我们在项目中使用 Vue 的 vue-lazyload 插件：
+**（1）安装插件**
+npm install vue-lazyload --save-dev
+**（2）在入口文件 man.js 中引入并使用**
+import VueLazyload from 'vue-lazyload'
+**然后再 vue 中直接使用**
+Vue.use(VueLazyload)
+**或者添加自定义选项**
+
+```js
+Vue.use(VueLazyload, {
+preLoad: 1.3,
+error: 'dist/error.png',
+loading: 'dist/loading.gif',
+attempt: 1
+})
+```
+
+**（3）在 vue 文件中将 img 标签的 src 属性直接改为 v-lazy ，从而将图片显示方式更改为懒加载显示。**
+**1.7、路由懒加载**
+**Vue 是单页面应用，可能会有很多的路由引入 ，这样使用 webpcak 打包后的文件很大，当进入首页时，加载的资源过多，页面会出现白屏的情况，不利于用户体验。如果我们能把不同路由对应的组件分割成不同的代码块，然后当路由被访问的时候才加载对应的组件，这样就更加高效了。这样会大大提高首屏显示的速度，但是可能其他的页面的速度就会降下来。**
+**路由懒加载：**
+
+```js
+const Foo = () => import('./Foo.vue')
+const router = new VueRouter({
+  routes: [
+    { path: '/foo', component: Foo }
+  ]
+})
+```
+
+**1.8、第三方插件的按需引入**
+**我们在项目中经常会需要引入第三方插件，如果我们直接引入整个插件，会导致项目的体积太大，我们可以借助 babel-plugin-component ，然后可以只引入需要的组件，以达到减小项目体积的目的。以下为项目中引入 element-ui 组件库为例：**
+**（1）首先，安装 babel-plugin-component ：**
+npm install babel-plugin-component -D
+**（2）然后，将 .babelrc 修改为：**
+
+```js
+{
+  "presets": [["es2015", { "modules": false }]],
+  "plugins": [
+    [
+      "component",
+      {
+        "libraryName": "element-ui",
+        "styleLibraryName": "theme-chalk"
+      }
+    ]
+  ]
+}
+```
+
+**（3）在 main.js 中引入部分组件：**
+
+```js
+import Vue from 'vue';
+import { Button, Select } from 'element-ui';
+
+ Vue.use(Button)
+ Vue.use(Select)
+```
+
+**1.9、优化无限列表性能**
+**如果你的应用存在非常长或者无限滚动的列表，那么需要采用 窗口化 的技术来优化性能，只需要渲染少部分区域的内容，减少重新渲染组件和创建 dom 节点的时间。你可以参考以下开源项目 vue-virtual-scroll-list 和 vue-virtual-scroller 来优化这种无限列表的场景的。**
+**1.10、服务端渲染 SSR or 预渲染**
+**服务端渲染是指 Vue 在客户端将标签渲染成的整个 html 片段的工作在服务端完成，服务端形成的 html 片段直接返回给客户端这个过程就叫做服务端渲染。**
+**（1）服务端渲染的优点：**
+**更好的 SEO：因为 SPA 页面的内容是通过 Ajax 获取，而搜索引擎爬取工具并不会等待 Ajax 异步完成后再抓取页面内容，所以在 SPA 中是抓取不到页面通过 Ajax 获取到的内容；而 SSR 是直接由服务端返回已经渲染好的页面（数据已经包含在页面中），所以搜索引擎爬取工具可以抓取渲染好的页面；**
+**更快的内容到达时间（首屏加载更快）：SPA 会等待所有 Vue 编译后的 js 文件都下载完成后，才开始进行页面的渲染，文件下载等需要一定的时间等，所以首屏渲染需要一定的时间；SSR 直接由服务端渲染好页面直接返回显示，无需等待下载 js 文件及再去渲染等，所以 SSR 有更快的内容到达时间；**
+**（2）服务端渲染的缺点：**
+**更多的开发条件限制：例如服务端渲染只支持 beforCreate 和 created 两个钩子函数，这会导致一些外部扩展库需要特殊处理，才能在服务端渲染应用程序中运行；并且与可以部署在任何静态文件服务器上的完全静态单页面应用程序 SPA 不同，服务端渲染应用程序，需要处于 Node.js server 运行环境；**
+**更多的服务器负载：在 Node.js 中渲染完整的应用程序，显然会比仅仅提供静态文件的 server 更加大量占用CPU 资源，因此如果你预料在高流量环境下使用，请准备相应的服务器负载，并明智地采用缓存策略。**
+**如果你的项目的 SEO 和 首屏渲染是评价项目的关键指标，那么你的项目就需要服务端渲染来帮助你实现最佳的初始加载性能和 SEO，具体的 Vue SSR 如何实现，可以参考作者的另一篇文章《Vue SSR 踩坑之旅》。如果你的 Vue 项目只需改善少数营销页面（例如 /， /about， /contact 等）的 SEO，那么你可能需要预渲染，在构建时 (build time) 简单地生成针对特定路由的静态 HTML 文件。优点是设置预渲染更简单，并可以将你的前端作为一个完全静态的站点，具体你可以使用 prerender-spa-plugin 就可以轻松地添加预渲染 。**
+
+### 二、Webpack 层面的优化
+
+---
+
+
+**2.1、Webpack 对图片进行压缩**
+**在 vue 项目中除了可以在 webpack.base.conf.js 中 url-loader 中设置 limit 大小来对图片处理，对小于 limit 的图片转化为 base64 格式，其余的不做操作。所以对有些较大的图片资源，在请求资源的时候，加载会很慢，我们可以用 image-webpack-loader来压缩图片：**
+**（1）首先，安装 image-webpack-loader ：**
+npm install image-webpack-loader --save-dev
+**（2）然后，在 webpack.base.conf.js 中进行配置：**
+
+```js
+{
+  test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+  use:[
+    {
+    loader: 'url-loader',
+    options: {
+      limit: 10000,
+      name: utils.assetsPath('img/[name].[hash:7].[ext]')
+      }
+    },
+    {
+      loader: 'image-webpack-loader',
+      options: {
+        bypassOnDebug: true,
+      }
+    }
+  ]
+}
+```
+
+**2.2、减少 ES6 转为 ES5 的冗余代码**
+**Babel 插件会在将 ES6 代码转换成 ES5 代码时会注入一些辅助函数，例如下面的 ES6 代码：**
+class HelloWebpack extends Component{...}
+**这段代码再被转换成能正常运行的 ES5 代码时需要以下两个辅助函数：**
+
+```js
+babel-runtime/helpers/createClass  // 用于实现 class 语法
+babel-runtime/helpers/inherits  // 用于实现 extends 语法
+```
+
+**在默认情况下， Babel 会在每个输出文件中内嵌这些依赖的辅助函数代码，如果多个源代码文件都依赖这些辅助函数，那么这些辅助函数的代码将会出现很多次，造成代码冗余。为了不让这些辅助函数的代码重复出现，可以在依赖它们时通过 require('babel-runtime/helpers/createClass') 的方式导入，这样就能做到只让它们出现一次。babel-plugin-transform-runtime 插件就是用来实现这个作用的，将相关辅助函数进行替换成导入语句，从而减小 babel 编译出来的代码的文件大小。**
+**（1）首先，安装 babel-plugin-transform-runtime ：**
+npm install babel-plugin-transform-runtime --save-dev
+**（2）然后，修改 .babelrc 配置文件为：**
+
+```js
+"plugins": [
+    "transform-runtime"
+]
+```
+
+**如果要看插件的更多详细内容，可以查看babel-plugin-transform-runtime 的 详细介绍。**
+**2.3、提取公共代码**
+**如果项目中没有去将每个页面的第三方库和公共模块提取出来，则项目会存在以下问题：**
+**相同的资源被重复加载，浪费用户的流量和服务器的成本。**
+**每个页面需要加载的资源太大，导致网页首屏加载缓慢，影响用户体验。**
+**所以我们需要将多个页面的公共代码抽离成单独的文件，来优化以上问题 。Webpack 内置了专门用于提取多个Chunk 中的公共部分的插件 CommonsChunkPlugin，我们在项目中 CommonsChunkPlugin 的配置如下：**
+
+```js
+// 所有在 package.json 里面依赖的包，都会被打包进 vendor.js 这个文件中。
+new webpack.optimize.CommonsChunkPlugin({
+  name: 'vendor',
+  minChunks: function(module, count) {
+    return (
+      module.resource &&
+      /\.js$/.test(module.resource) &&
+      module.resource.indexOf(
+        path.join(__dirname, '../node_modules')
+      ) === 0
+    );
+  }
+}),
+// 抽取出代码模块的映射关系
+new webpack.optimize.CommonsChunkPlugin({
+  name: 'manifest',
+  chunks: ['vendor']
+})
+```
+
+**如果要看插件的更多详细内容，可以查看 CommonsChunkPlugin 的 详细介绍。**
+**2.4、模板预编译**
+**当使用 DOM 内模板或 JavaScript 内的字符串模板时，模板会在运行时被编译为渲染函数。通常情况下这个过程已经足够快了，但对性能敏感的应用还是最好避免这种用法。**
+**预编译模板最简单的方式就是使用单文件组件——相关的构建设置会自动把预编译处理好，所以构建好的代码已经包含了编译出来的渲染函数而不是原始的模板字符串。**
+**如果你使用 webpack，并且喜欢分离 JavaScript 和模板文件，你可以使用 vue-template-loader，它也可以在构建过程中把模板文件转换成为 JavaScript 渲染函数。**
+**2.5、提取组件的 CSS**
+**当使用单文件组件时，组件内的 CSS 会以 style 标签的方式通过 JavaScript 动态注入。这有一些小小的运行时开销，如果你使用服务端渲染，这会导致一段 “无样式内容闪烁 (fouc) ” 。将所有组件的 CSS 提取到同一个文件可以避免这个问题，也会让 CSS 更好地进行压缩和缓存。**
+**查阅这个构建工具各自的文档来了解更多：**
+**webpack + vue-loader ( vue-cli 的 webpack 模板已经预先配置好)**
+**Browserify + vueify**
+**Rollup + rollup-plugin-vue**
+**2.6、优化 SourceMap**
+**我们在项目进行打包后，会将开发中的多个文件代码打包到一个文件中，并且经过压缩、去掉多余的空格、babel编译化后，最终将编译得到的代码会用于线上环境，那么这样处理后的代码和源代码会有很大的差别，当有 bug的时候，我们只能定位到压缩处理后的代码位置，无法定位到开发环境中的代码，对于开发来说不好调式定位问题，因此 sourceMap 出现了，它就是为了解决不好调式代码问题的。**
+**SourceMap 的可选值如下（+ 号越多，代表速度越快，- 号越多，代表速度越慢, o 代表中等速度 ）**
+**开发环境推荐：cheap-module-eval-source-map**
+**生产环境推荐：cheap-module-source-map**
+**原因如下：**
+**cheap：源代码中的列信息是没有任何作用，因此我们打包后的文件不希望包含列相关信息，只有行信息能建立打包前后的依赖关系。因此不管是开发环境或生产环境，我们都希望添加 cheap 的基本类型来忽略打包前后的列信息；**
+**module ：不管是开发环境还是正式环境，我们都希望能定位到bug的源代码具体的位置，比如说某个 Vue 文件报错了，我们希望能定位到具体的 Vue 文件，因此我们也需要 module 配置；**
+**soure-map ：source-map 会为每一个打包后的模块生成独立的 soucemap 文件 ，因此我们需要增加source-map 属性；**
+**eval-source-map：eval 打包代码的速度非常快，因为它不生成 map 文件，但是可以对 eval 组合使用 eval-source-map 使用会将 map 文件以 DataURL 的形式存在打包后的 js 文件中。在正式环境中不要使用 eval-source-map, 因为它会增加文件的大小，但是在开发环境中，可以试用下，因为他们打包的速度很快。**
+**2.7、构建结果输出分析**
+**Webpack 输出的代码可读性非常差而且文件非常大，让我们非常头疼。为了更简单、直观地分析输出结果，社区中出现了许多可视化分析工具。这些工具以图形的方式将结果更直观地展示出来，让我们快速了解问题所在。接下来讲解我们在 Vue 项目中用到的分析工具：webpack-bundle-analyzer 。**
+**我们在项目中 webpack.prod.conf.js 进行配置：**
+
+```js
+if (config.build.bundleAnalyzerReport) {
+  var BundleAnalyzerPlugin =   require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+  webpackConfig.plugins.push(new BundleAnalyzerPlugin());
+}
+```
+
+**执行 $ npm run build --report 后生成分析报告如下：**
+**2.8、Vue 项目的编译优化**
+**如果你的 Vue 项目使用 Webpack 编译，需要你喝一杯咖啡的时间，那么也许你需要对项目的 Webpack 配置进行优化，提高 Webpack 的构建效率。**
+
+### 三、基础的 Web 技术优化
+
+**3.1、开启 gzip 压缩**
+**gzip 是 GNUzip 的缩写，最早用于 UNIX 系统的文件压缩。HTTP 协议上的 gzip 编码是一种用来改进 web 应用程序性能的技术，web 服务器和客户端（浏览器）必须共同支持 gzip。目前主流的浏览器，Chrome，firefox，IE等都支持该协议。常见的服务器如 Apache，Nginx，IIS 同样支持，gzip 压缩效率非常高，通常可以达到 70% 的压缩率，也就是说，如果你的网页有 30K，压缩之后就变成了 9K 左右**
+**以下我们以服务端使用我们熟悉的 express 为例，开启 gzip 非常简单，相关步骤如下：**
+**安装：**
+**npm install compression --save 添加代码逻辑：**
+
+```js
+var compression = require('compression');
+var app = express();
+app.use(compression())
+```
+
+**3.2、浏览器缓存**
+**为了提高用户加载页面的速度，对静态资源进行缓存是非常必要的，根据是否需要重新向服务器发起请求来分类，将 HTTP 缓存规则分为两大类（强制缓存，对比缓存）。**
+**3.3、CDN 的使用**
+**浏览器从服务器上下载 CSS、js 和图片等文件时都要和服务器连接，而大部分服务器的带宽有限，如果超过限制，网页就半天反应不过来。而 CDN 可以通过不同的域名来加载文件，从而使下载文件的并发连接数大大增加，且CDN 具有更好的可用性，更低的网络延迟和丢包率 。**
+**3.4、使用 Chrome Performance 查找性能瓶颈**
+**Chrome 的 Performance 面板可以录制一段时间内的 js 执行细节及时间。使用 Chrome 开发者工具分析页面性能的步骤如下。**
+**打开 Chrome 开发者工具，切换到 Performance 面板**
+**点击 Record 开始录制**
+**刷新页面或展开某个节点**
+**点击 Stop 停止录制**
+
+
+
 ## 70.Vue Router history 模式为什么刷新出现404
 
 原因是因为浏览器在刷新页面时会向服务器发送GET请求，但此时服务器并没有相应的资源来匹配这个请求，因为在History模式下，所有路由都是在前端路由中实现的，并没有对应的后端资源文件。
 
-解决方案
+**解决方案**
 为了解决这个问题，我们需要在服务器端进行相关配置，让所有的路由都指向同一个入口文件（比如[index.html](http://index.html/)），由前端路由来处理URL请求，返回对应的页面内容。具体的配置方式取决于服务器类型，常见的有Apache、Nginx等。
 以Nginx为例，可以在Nginx的配置文件中加入如下代码
 
@@ -2447,10 +2704,10 @@ server {
 ## 71.Vue Router history 模式上线需要注意什么事项
 
 Vue Router的History模式相比于默认的Hash模式来说，能够更好地模拟传统的多页面应用的URL地址，让用户体验更加自然。但是，使用History模式需要注意以下几点事项：
-后端配置：使用History模式需要后端对所有可能的路由路径都进行处理，以避免在刷新或直接输入URL时出现404错误。后端配置的方式取决于后端服务器的类型，如Apache、Nginx等，需要在服务器上进行相关配置。
-安全性：使用History模式会暴露出服务器上的文件路径，因此需要特别注意安全性。在部署时需要仔细检查服务器配置，确保不会因为恶意请求而导致安全问题。
-兼容性：History模式需要支持HTML5的history.pushState API，因此在一些较老的浏览器上可能会存在兼容性问题。需要在开发时做好相关的测试和兼容性处理。
-打包发布：在使用Webpack等工具打包发布时，需要配置正确的publicPath，保证HTML中引用的资源路径正确。同时需要注意，如果项目使用了多个子路由，需要在打包时将所有的子路由都配置到publicPath中。
+**后端配置**：使用History模式需要后端对所有可能的路由路径都进行处理，以避免在刷新或直接输入URL时出现404错误。后端配置的方式取决于后端服务器的类型，如Apache、Nginx等，需要在服务器上进行相关配置。
+**安全性**：使用History模式会暴露出服务器上的文件路径，因此需要特别注意安全性。在部署时需要仔细检查服务器配置，确保不会因为恶意请求而导致安全问题。
+**兼容性**：History模式需要支持HTML5的history.pushState API，因此在一些较老的浏览器上可能会存在兼容性问题。需要在开发时做好相关的测试和兼容性处理。
+**打包发布**：在使用Webpack等工具打包发布时，需要配置正确的publicPath，保证HTML中引用的资源路径正确。同时需要注意，如果项目使用了多个子路由，需要在打包时将所有的子路由都配置到publicPath中。
 总之，使用History模式需要对后端进行相关配置，并且需要特别注意安全性和兼容性问题，同时在打包发布时需要正确配置publicPath，确保页面资源路径正确。
 
 ## 72.用vue-router hash模式实现锚点
@@ -2495,9 +2752,10 @@ mounted () {
 虚拟DOM和diff算法是React\vue中的两个核心概念。
 虚拟DOM是指用JavaScript对象模拟DOM树结构，包括节点的类型、属性和子节点等信息。当状态发生变化时，React会使用新的状态生成一个新的虚拟DOM树，并通过对比新旧虚拟DOM树的差异（diff算法），计算出需要更新的节点，最终只更新需要更新的节点，从而提高性能。
 diff算法是指在两个树形结构之间找出差异的算法。在React中，通过对比新旧虚拟DOM树节点的不同，分为以下三种情况：
-1替换节点：节点的类型发生了变化，例如从div变成了p。
-2更新属性：节点的属性发生了变化，例如class、style等。
-3更新子节点：节点的子节点发生了变化。
+
+1. 替换节点：节点的类型发生了变化，例如从div变成了p。
+2. 更新属性：节点的属性发生了变化，例如class、style等。
+3. 更新子节点：节点的子节点发生了变化。
 
 在diff算法的过程中，key的作用是给每个虚拟DOM节点添加一个唯一的标识符。这样在进行新旧虚拟DOM对比时，可以通过key值的对比快速判断是否是同一个节点，避免不必要的DOM操作。如果不添加key，diff算法只能通过遍历子节点的方式查找，效率较低。
 
@@ -2844,8 +3102,9 @@ render 函数接收两个参数：第一个参数是 createElement 函数，用�
 **函数式组件解决了什么问题？**
 
 在 Vue 2 中，函数式组件有两个主要用例：
-●作为性能优化，因为它们的初始化速度比有状态组件快得多
-●返回多个根节点
+
+- 作为性能优化，因为它们的初始化速度比有状态组件快得多
+- 返回多个根节点
 
 然而，在 Vue 3 中，有状态组件的性能已经提高到可以忽略不计的程度。此外，有状态组件现在还包括返回多个根节点的能力。
 因此，函数式组件剩下的唯一用例就是简单组件，比如创建动态标题的组件。否则，建议你像平常一样使用有状态组件。
@@ -2946,14 +3205,17 @@ export default DynamicHeading;
 ```
 
 另外，函数式组件在 Vue3.x 相对 2.x 的变化：
-●在 3.x 中，函数式组件的性能提升可以忽略不计，因此我们建议只使用有状态的组件
-●函数式组件只能使用接收 props 和 context 的普通函数创建 (即：slots，attrs，emit)。
-●非兼容变更：functional attribute 在单文件组件 (SFC) <template> 已被移除
-●非兼容变更：{ functional: true } 选项在通过函数创建组件已被移除
+
+- 在 3.x 中，函数式组件的性能提升可以忽略不计，因此我们建议只使用有状态的组件
+- 函数式组件只能使用接收 props 和 context 的普通函数创建 (即：slots，attrs，emit)。
+- 非兼容变更：functional attribute 在单文件组件 (SFC) <template> 已被移除
+- 非兼容变更：{ functional: true } 选项在通过函数创建组件已被移除
 
 在 Vue 2 中，函数式组件有两个主要用例：
-●作为性能优化，因为它们的初始化速度比有状态组件快得多
-●返回多个根节点
+
+- 作为性能优化，因为它们的初始化速度比有状态组件快得多
+- 返回多个根节点
+
 然而，在 Vue 3 中，有状态组件的性能已经提高到可以忽略不计的程度。此外，有状态组件现在还包括返回多个根节点的能力。
 因此，函数式组件剩下的唯一用例就是简单组件，比如创建动态标题的组件。否则，建议你像平常一样使用有状态组件。
 
@@ -2975,8 +3237,9 @@ export default DynamicHeading;
 **保持单向数据流的重要性**
 
 在父组件中，一个变量往往关联着多个变量或动作
-●如果在子组件中修改了传进来的prop对象，并且没有在父组件中watch该prop对象，不会主动触发其他变量的修改或动作的发生，导致数据局部展示错误。
-●如果主动watch该prop对象，由于无法准确预知修改的来源和方式，从而大大增加了父组件的维护难度。
+
+- 如果在子组件中修改了传进来的prop对象，并且没有在父组件中watch该prop对象，不会主动触发其他变量的修改或动作的发生，导致数据局部展示错误。
+- 如果主动watch该prop对象，由于无法准确预知修改的来源和方式，从而大大增加了父组件的维护难度。
 
 **Vue 是如何实现单向数据流的？**
 
@@ -3007,16 +3270,24 @@ Vue 的模板编译是将 Vue 的模板代码转化为可执行的 JavaScript �
 Vue 模板（template）在运行前会被编译成渲染函数，避免了每次渲染时重新解析模板的开销。渲染函数具有更高效的执行速度，并且可以在组件初始化时预先生成，从而减少了每次更新时的性能消耗。
 它的优点如下：
 
-●提高性能：模板编译将模板转换成更高效的代码，避免了运行时解析模板的开销，提升了应用的性能。
-●简化开发：通过模板编译，开发者可以使用类似 HTML 的标记语法编写组件模板，而无需直接操作 JavaScript 对象和函数，降低了开发的难度。
-●实现响应式更新：模板编译会将模板中的指令和数据转化成一组渲染函数，这些渲染函数可以与 Vue 的响应式系统协同工作，实现数据的自动更新和视图的重渲染。
-**●**基于模板的性能优化
+- 提高性能：模板编译将模板转换成更高效的代码，避免了运行时解析模板的开销，提升了应用的性能。
 
-- 静态节点提升：Vue 在模板编译阶段会检测出那些静态节点（不依赖响应式数据的节点），并将其优化为常量，避免了在每次重新渲染时对这些节点进行重复的创建和比对操作。
-- 列表渲染优化：Vue 提供了 v-for 指令用于列表渲染，而且在编译时会自动为每个列表项生成唯一的 key 值。这样在更新列表时，Vue 可以精确地检测到每个列表项的变化，减少了不必要的 DOM 操作，提高了性能。
-- 条件渲染优化：Vue 的模板支持使用 v-if 和 v-show 指令进行条件渲染。在编译时，Vue 会根据指令的条件进行静态分析，如果条件是确定的（即不依赖响应式数据），则会进行静态提升，优化渲染性能。
-- 缓存事件处理函数：Vue 的模板编译会自动为事件处理函数生成缓存版本，在渲染过程中复用同一个处理函数，避免了重复创建匿名函数的开销。
-- 内置指令：Vue 内置了一些常用的指令，如 v-model、v-bind、v-on 等。这些指令在模板编译时会被转换为相应的渲染函数，能够更高效地更新视图，并且可以方便地处理用户输入、属性绑定和事件监听等操作。
+- 简化开发：通过模板编译，开发者可以使用类似 HTML 的标记语法编写组件模板，而无需直接操作 JavaScript 对象和函数，降低了开发的难度。
+
+- 实现响应式更新：模板编译会将模板中的指令和数据转化成一组渲染函数，这些渲染函数可以与 Vue 的响应式系统协同工作，实现数据的自动更新和视图的重渲染。
+
+- 基于模板的性能优化
+
+  - 静态节点提升：Vue 在模板编译阶段会检测出那些静态节点（不依赖响应式数据的节点），并将其优化为常量，避免了在每次重新渲染时对这些节点进行重复的创建和比对操作。
+
+  - 列表渲染优化：Vue 提供了 v-for 指令用于列表渲染，而且在编译时会自动为每个列表项生成唯一的 key 值。这样在更新列表时，Vue 可以精确地检测到每个列表项的变化，减少了不必要的 DOM 操作，提高了性能。
+
+  - 条件渲染优化：Vue 的模板支持使用 v-if 和 v-show 指令进行条件渲染。在编译时，Vue 会根据指令的条件进行静态分析，如果条件是确定的（即不依赖响应式数据），则会进行静态提升，优化渲染性能。
+
+  - 缓存事件处理函数：Vue 的模板编译会自动为事件处理函数生成缓存版本，在渲染过程中复用同一个处理函数，避免了重复创建匿名函数的开销。
+
+  - 内置指令：Vue 内置了一些常用的指令，如 v-model、v-bind、v-on 等。这些指令在模板编译时会被转换为相应的渲染函数，能够更高效地更新视图，并且可以方便地处理用户输入、属性绑定和事件监听等操作。
+
 
 **Runtime + Compiler 版本以及 Runtime only 版本**
 
@@ -3048,17 +3319,20 @@ new Vue({
 **模板变异过程解析**
 
 在 Vue 的整个编译过程中，会做三件事：
-●解析模板 parse，生成 AST
-●优化 AST optimize
-●生成代码 generate
+
+- 解析模板 parse，生成 AST
+- 优化 AST optimize
+- 生成代码 generate
 
 在 Vue 的编译过程中，其核心步骤可以分为以下三个阶段：
-1解析模板 parse，生成 AST：在这一阶段，Vue 会将模板解析为抽象语法树（AST），以便后续进行优化和代码生成。Vue 的解析器采用了 HTML Parser 和 Text Parser 两个解析器，分别用于解析 HTML 标签和模板文本。解析器会将模板解析为一组元素描述对象和指令描述对象，然后使用这些对象构建出整个模板的 AST。
-2优化 AST optimize：在生成 AST 后，Vue 会对其进行优化处理，以便更高效地生成代码。这一阶段包括以下三个优化步骤：
-○静态节点标记。Vue 会对那些静态节点进行标记，避免其在之后的更新中重新渲染；
-○静态节点提升。Vue 会将那些只包含静态内容的节点，在编译时提升为常量，从而减少渲染开销。
-○插槽优化。Vue 会对所有的插槽节点进行标记和优化，从而更高效地处理 slot 元素的渲染。
-3生成代码 generate：在 AST 优化后，Vue 会进一步将其转换为可执行的代码，以便生成组件的渲染函数。具体来说，Vue 会根据每个节点生成相应的渲染函数，并将这些函数组合成一个完整的组件渲染函数。同时，Vue 还会为每个组件生成相应的静态 Render 函数，以便在第一次渲染时可以直接使用，提高性能。
+1、解析模板 parse，生成 AST：在这一阶段，Vue 会将模板解析为抽象语法树（AST），以便后续进行优化和代码生成。Vue 的解析器采用了 HTML Parser 和 Text Parser 两个解析器，分别用于解析 HTML 标签和模板文本。解析器会将模板解析为一组元素描述对象和指令描述对象，然后使用这些对象构建出整个模板的 AST。
+2、优化 AST optimize：在生成 AST 后，Vue 会对其进行优化处理，以便更高效地生成代码。这一阶段包括以下三个优化步骤：
+
+- 静态节点标记。Vue 会对那些静态节点进行标记，避免其在之后的更新中重新渲染；
+- 静态节点提升。Vue 会将那些只包含静态内容的节点，在编译时提升为常量，从而减少渲染开销。
+- 插槽优化。Vue 会对所有的插槽节点进行标记和优化，从而更高效地处理 slot 元素的渲染。
+
+3、生成代码 generate：在 AST 优化后，Vue 会进一步将其转换为可执行的代码，以便生成组件的渲染函数。具体来说，Vue 会根据每个节点生成相应的渲染函数，并将这些函数组合成一个完整的组件渲染函数。同时，Vue 还会为每个组件生成相应的静态 Render 函数，以便在第一次渲染时可以直接使用，提高性能。
 综上所述，Vue 的编译过程包括解析模板、优化 AST 和生成代码三个核心步骤，每个阶段都有其特定的处理方式，以便最终生成高效的组件渲染函数。
 
 一个典型的模板编译例子
@@ -3085,9 +3359,9 @@ function render(_ctx, _cache) {
 ```
 
 可以看到，在编译后生成的渲染函数中：
-1使用 _createBlock 创建根节点，并通过 _createVNode 来创建子节点。
-2模板中的动态内容 {{ message }} 被转换为 _toDisplayString(_ctx.message) 来实现动态渲染
-3事件处理函数(@click="handleClick") 被转换为 { onClick: _cache[1] || (_cache[1] = $event => _ctx.handleClick($event)) }
+1、使用 _createBlock 创建根节点，并通过 _createVNode 来创建子节点。
+2、模板中的动态内容 {{ message }} 被转换为 _toDisplayString(_ctx.message) 来实现动态渲染
+3、事件处理函数(@click="handleClick") 被转换为 { onClick: _cache[1] || (_cache[1] = $event => _ctx.handleClick($event)) }
 当然上述代码只是一个简化的示例，实际的编译结果会更加复杂，包含更多的优化和处理逻辑。
 
 **了解 Vue template 与 React JSX 的差异及优劣势对比**
@@ -3095,99 +3369,117 @@ function render(_ctx, _cache) {
 而在 React 框架中，对于结构的表现更多是使用 JSX。
 首先，它们之间存在一些差异：
 
-1语法风格：Vue 使用基于 HTML 的模板语法，使用双大括号 {{ }} 来进行插值，使用指令如 v-if、v-for 等来处理逻辑。而 React 使用 JavaScript 的语法扩展 JSX，在 JavaScript 代码中直接编写组件的结构和逻辑。
-2组件定义方式：在 Vue 中，可以通过定义一个带有 template 字段的 Vue 组件对象来编写组件。这个 template 字段就是 Vue 模板。而在 React 中，通过定义一个继承自 React.Component 的类组件，或使用函数式组件来编写组件，通过 render 方法来返回要渲染的 JSX 结构。
-3动态属性和样式绑定：Vue 的模板语法支持直接在元素上使用动态属性绑定，例如 :class、:style 等。而在 React 中，使用 JSX 属性来进行动态属性和样式的绑定，需要使用大括号 {} 进行包裹，例如 className、style。
-4条件渲染和循环：Vue 中使用指令 v-if 和 v-for 来进行条件渲染和循环。而在 React 中，使用 JavaScript 表达式来进行条件渲染，例如使用三元表达式 {condition ? trueBlock : falseBlock} 和 map() 函数来进行循环渲染。
-5事件处理：Vue 的模板语法通过指令 @ 或 v-on 来绑定事件处理函数。而在 React 中，通过在 JSX 的属性中直接使用事件处理函数来进行绑定，例如 onClick、onChange 等。
+1、语法风格：Vue 使用基于 HTML 的模板语法，使用双大括号 {{ }} 来进行插值，使用指令如 v-if、v-for 等来处理逻辑。而 React 使用 JavaScript 的语法扩展 JSX，在 JavaScript 代码中直接编写组件的结构和逻辑。
+2、组件定义方式：在 Vue 中，可以通过定义一个带有 template 字段的 Vue 组件对象来编写组件。这个 template 字段就是 Vue 模板。而在 React 中，通过定义一个继承自 React.Component 的类组件，或使用函数式组件来编写组件，通过 render 方法来返回要渲染的 JSX 结构。
+3、动态属性和样式绑定：Vue 的模板语法支持直接在元素上使用动态属性绑定，例如 :class、:style 等。而在 React 中，使用 JSX 属性来进行动态属性和样式的绑定，需要使用大括号 {} 进行包裹，例如 className、style。
+4、条件渲染和循环：Vue 中使用指令 v-if 和 v-for 来进行条件渲染和循环。而在 React 中，使用 JavaScript 表达式来进行条件渲染，例如使用三元表达式 {condition ? trueBlock : falseBlock} 和 map() 函数来进行循环渲染。
+5、事件处理：Vue 的模板语法通过指令 @ 或 v-on 来绑定事件处理函数。而在 React 中，通过在 JSX 的属性中直接使用事件处理函数来进行绑定，例如 onClick、onChange 等。
 总的来说，Vue 的模板语法更加类似于传统的 HTML + 模板指令的写法，更容易理解和上手；而 React 的 JSX 则将组件的结构和逻辑紧密地融合在一起，更加灵活和可控。
 
 **优劣势分析**
-Vue Template 的优势：
-●语法友好：Vue 的模板采用类似 HTML 的标记语言，容易理解和上手。
-●可视化编辑工具支持：由于模板具有标记语言的特点，可以在一些编辑器中获得较好的支持。
-●兼容性强：Vue 的模板相对容易迁移，可适应旧项目，且模板和逻辑分离，避免了代码混杂问题。
-Vue Template 的劣势：
-●扩展性差：Vue 的模板只能使用内置的 JavaScript 功能，扩展性相对较差，无法灵活地处理复杂逻辑。
-●难以调试：模板语法虽然类似 HTML，但实际上是 JavaScript 表达式，需要特定工具来进行调试。
-●可能产生重复代码：模板中相似的操作可能需要在多个组件中重复编写，导致代码冗余和维护困难。
-React JSX 的优势：
-●强大的扩展性：JSX 可以使用 JavaScript 的完整功能，允许在模板中编写复杂逻辑和自定义组件。
-●更好的一致性：JSX 与 JavaScript 具有更高的语法一致性，对于熟悉 JavaScript 开发者来说更加自然。
-●更灵活的调试：由于 JSX 是 JavaScript 代码，可以直接在浏览器中进行调试。
-React JSX 的劣势：
-●上手难度较高：相较于 Vue 的模板，JSX 的语法相对复杂，对于新手来说上手难度较大。
-●学习成本高：需要了解和熟悉 JSX 语法和 React 的生命周期等概念。
-●编辑器支持较差：JSX 的语法对于一些编辑器可能支持不够好，可能需要额外的插件或配置。
+
+- Vue Template 的优势：
+
+  - 语法友好：Vue 的模板采用类似 HTML 的标记语言，容易理解和上手。
+
+  - 可视化编辑工具支持：由于模板具有标记语言的特点，可以在一些编辑器中获得较好的支持。
+
+  - 兼容性强：Vue 的模板相对容易迁移，可适应旧项目，且模板和逻辑分离，避免了代码混杂问题。
+
+- Vue Template 的劣势：
+  - 扩展性差：Vue 的模板只能使用内置的 JavaScript 功能，扩展性相对较差，无法灵活地处理复杂逻辑。
+  - 难以调试：模板语法虽然类似 HTML，但实际上是 JavaScript 表达式，需要特定工具来进行调试。
+  - 可能产生重复代码：模板中相似的操作可能需要在多个组件中重复编写，导致代码冗余和维护困难。
+- React JSX 的优势：
+  - 强大的扩展性：JSX 可以使用 JavaScript 的完整功能，允许在模板中编写复杂逻辑和自定义组件。
+  - 更好的一致性：JSX 与 JavaScript 具有更高的语法一致性，对于熟悉 JavaScript 开发者来说更加自然。
+  - 更灵活的调试：由于 JSX 是 JavaScript 代码，可以直接在浏览器中进行调试。
+- React JSX 的劣势：
+  - 上手难度较高：相较于 Vue 的模板，JSX 的语法相对复杂，对于新手来说上手难度较大。
+  - 学习成本高：需要了解和熟悉 JSX 语法和 React 的生命周期等概念。
+  - 编辑器支持较差：JSX 的语法对于一些编辑器可能支持不够好，可能需要额外的插件或配置。
 
 ## 83.详解 Vue 性能优化
 
 Vue 相关的性能优化，大致可以分为：
-**○**页面渲染加载性能优化
-■避免将所有数据设置为响应式数据
-■合理使用 computed 和 watch 
-■列表性能优化
-■服务端渲染 SSR
-**○**页面更新性能优化
-■静态内容标记为只渲染一次(v-once)以及缓存模板的子树(v-memo)
-■减少大型不可变数据的响应性开销
-■给 v-for 添加 key 且避免同时使用 v-if
-■合理使用 v-if 与 v-show
-■使用 keep-alive 组件
-**○**构建优化
-■路由懒加载
-■包体积优化与 Tree-shaking 优化
-■SourceMap 的处理
 
-
+- 页面渲染加载性能优化
+  - 避免将所有数据设置为响应式数据
+  - 合理使用 computed 和 watch 
+  - 列表性能优化
+  - 服务端渲染 SSR
+- 页面更新性能优化
+  - 静态内容标记为只渲染一次(v-once)以及缓存模板的子树(v-memo)
+  - 减少大型不可变数据的响应性开销
+  - 给 v-for 添加 key 且避免同时使用 v-if
+  - 合理使用 v-if 与 v-show
+  - 使用 keep-alive 组件
+- **○**构建优化
+  - 路由懒加载
+  - 包体积优化与 Tree-shaking 优化
+  - SourceMap 的处理
 
 ## 84.详解虚拟 DOM 与 Vue DIFF 算法原理
 
-1什么是虚拟 DOM
-○Vue 的虚拟 DOM（Virtual DOM）是 Vue 框架中的一种技术，用于优化 DOM 操作的效率和性能。虚拟 DOM 是一个 JavaScript 对象，它是对实际 DOM 结构的一种抽象表示。
-○每个虚拟DOM节点（VNode）代表一个真实DOM节点或一段文本。虚拟DOM对象包含与之相关的信息，如标签名、属性、子节点等。
-2什么是 DIFF 算法
-○[Vue.js](http://vue.js/) 的 Virtual DOM 实现了一种高效的 diff 算法，能够快速比较两个虚拟 DOM 树的差异。
-3它们解决了什么问题？
-○当Vue组件的状态发生改变时，Vue会通过 DOM DIFF 算法比较新旧虚拟DOM树找出需要更新的部分，并将这些部分批量地更新到实际 DOM 中。这种批量更新可以减少对实际 DOM 的直接操作，从而提高性能。
-4为什么要用虚拟 DOM？
-a避免频繁操作 DOM，更好的实现跨平台、组件状态追踪等特性
-5DOM DIFF 算法中运用了哪些优化思路？
-○给列表项添加 Key 值，带有唯一 key 值的节点可以减少虚拟DOM的比对操作
-○将树的完全 DIFF 改为同层 DIFF，时间复杂度从 O(n3) 下降到 O(n)
-○同级比较中为了减少元素移动次数，采用了双指针配合最长连续子串算法
-○Vue3 的静态标记算法，在编译阶段，通过编译器静态地分析模板，并识别其中的静态节点，在 DIFF 中可以跳过静态节点
+1、什么是虚拟 DOM
+
+- Vue 的虚拟 DOM（Virtual DOM）是 Vue 框架中的一种技术，用于优化 DOM 操作的效率和性能。虚拟 DOM 是一个 JavaScript 对象，它是对实际 DOM 结构的一种抽象表示。
+- 每个虚拟DOM节点（VNode）代表一个真实DOM节点或一段文本。虚拟DOM对象包含与之相关的信息，如标签名、属性、子节点等。
+
+2、什么是 DIFF 算法
+
+- [Vue.js](http://vue.js/) 的 Virtual DOM 实现了一种高效的 diff 算法，能够快速比较两个虚拟 DOM 树的差异。
+
+3、它们解决了什么问题？
+
+- 当Vue组件的状态发生改变时，Vue会通过 DOM DIFF 算法比较新旧虚拟DOM树找出需要更新的部分，并将这些部分批量地更新到实际 DOM 中。这种批量更新可以减少对实际 DOM 的直接操作，从而提高性能。
+
+4、为什么要用虚拟 DOM？
+
+- 避免频繁操作 DOM，更好的实现跨平台、组件状态追踪等特性
+
+5、DOM DIFF 算法中运用了哪些优化思路？
+
+- 给列表项添加 Key 值，带有唯一 key 值的节点可以减少虚拟DOM的比对操作
+- 将树的完全 DIFF 改为同层 DIFF，时间复杂度从 O(n3) 下降到 O(n)
+- 同级比较中为了减少元素移动次数，采用了双指针配合最长连续子串算法
+- Vue3 的静态标记算法，在编译阶段，通过编译器静态地分析模板，并识别其中的静态节点，在 DIFF 中可以跳过静态节点
 
 拓展回答
 DOM diff 作为工程问题，需要具有一定算法思维，因此经常出现在面试场景中，毕竟这是难得出现在工程领域的算法问题。
 需要注意的是，为了提高 diff 算法的性能，现代前端框架往往采用一些优化技巧，比如只比较同层级的节点、使用 key 值进行优化等，从而进一步提高渲染性能。
 
 **为什么要使用虚拟 DOM？虚拟 DOM 的性能一定比原生 DOM 好吗？**
-●当然是前端优化方面，避免频繁操作 DOM，频繁操作 DOM 会可能让浏览器回流和重绘，性能也会非常低，还有就是手动操作 DOM 还是比较麻烦的，要考虑浏览器兼容性问题，当前 jQuery 等库简化了 DOM 操作，但是项目复杂了，DOM 操作还是会变得复杂，数据操作也变得复杂
-●并不是所有情况使用虚拟 DOM 都提高性能，是针对在复杂的的项目使用。如果简单的操作，使用虚拟 DOM 要创建虚拟 DOM 对象等等一系列操作，还不如普通 的DOM 操作
-●跨平台：虚拟 DOM 可以实现跨平台渲染，服务器渲染、小程序、原生应用都使用了虚拟 DOM
-●降低真实 DOM 操作：使用虚拟 DOM，可以实现改变了当前的状态不需要立即的去更新 DOM。并且实现通过前后两次差异进行比较，只更新需要更新的内容，对于没有改变的内容不做任何操作
-●状态追踪：虚拟 DOM 可以比较好的维护组件的状态，更好的跟踪的状态
+
+- 当然是前端优化方面，避免频繁操作 DOM，频繁操作 DOM 会可能让浏览器回流和重绘，性能也会非常低，还有就是手动操作 DOM 还是比较麻烦的，要考虑浏览器兼容性问题，当前 jQuery 等库简化了 DOM 操作，但是项目复杂了，DOM 操作还是会变得复杂，数据操作也变得复杂
+- 并不是所有情况使用虚拟 DOM 都提高性能，是针对在复杂的的项目使用。如果简单的操作，使用虚拟 DOM 要创建虚拟 DOM 对象等等一系列操作，还不如普通 的DOM 操作
+- 跨平台：虚拟 DOM 可以实现跨平台渲染，服务器渲染、小程序、原生应用都使用了虚拟 DOM
+- 降低真实 DOM 操作：使用虚拟 DOM，可以实现改变了当前的状态不需要立即的去更新 DOM。并且实现通过前后两次差异进行比较，只更新需要更新的内容，对于没有改变的内容不做任何操作
+- 状态追踪：虚拟 DOM 可以比较好的维护组件的状态，更好的跟踪的状态
 
 **Vue 2 和 Vue 3 的 DOM DIFF 完整过程**
 
 Vue 2 使用了经典的 Diff 算法，也称为双指针算法。其原理可以概括为以下几个步骤：
-1生成新旧虚拟DOM树：在重新渲染组件时，Vue会生成新的虚拟DOM树，并将其与旧的虚拟DOM树进行比较。
-2深度优先遍历：Vue 2 使用深度优先遍历算法来遍历新旧虚拟DOM树的节点。同时，Vue 2 会为每个节点添加唯一的标识符(VNode Key)以提高性能。
-3Diff过程：在遍历的过程中，Vue 2 会对比新旧虚拟DOM节点的类型和属性，判断是否需要更新实际DOM。具体的对比逻辑如下：
-○如果新旧虚拟DOM节点相同（类型相同且Key相同），则只需要更新节点的属性；
-○如果新旧虚拟DOM节点不同，则直接替换整个节点及其子节点；
-○如果节点存在子节点，则递归地对子节点进行Diff；
-○如果节点在旧虚拟DOM树中存在但在新虚拟DOM树中不存在，则直接删除该节点及其子节点。
-4更新实际DOM：根据Diff的结果，Vue 2 会将需要更新的部分进行批量更新，使实际DOM与新的虚拟DOM树保持一致。
+1、生成新旧虚拟DOM树：在重新渲染组件时，Vue会生成新的虚拟DOM树，并将其与旧的虚拟DOM树进行比较。
+2、深度优先遍历：Vue 2 使用深度优先遍历算法来遍历新旧虚拟DOM树的节点。同时，Vue 2 会为每个节点添加唯一的标识符(VNode Key)以提高性能。
+3、Diff过程：在遍历的过程中，Vue 2 会对比新旧虚拟DOM节点的类型和属性，判断是否需要更新实际DOM。具体的对比逻辑如下：
+
+- 如果新旧虚拟DOM节点相同（类型相同且Key相同），则只需要更新节点的属性；
+- 如果新旧虚拟DOM节点不同，则直接替换整个节点及其子节点；
+- 如果节点存在子节点，则递归地对子节点进行Diff；
+- 如果节点在旧虚拟DOM树中存在但在新虚拟DOM树中不存在，则直接删除该节点及其子节点。
+
+4、更新实际DOM：根据Diff的结果，Vue 2 会将需要更新的部分进行批量更新，使实际DOM与新的虚拟DOM树保持一致。
 
 Vue 3 采用了基于观察者的 Diff 算法，也称为静态分析算法。其主要原理如下：
-1生成新旧虚拟DOM树：与Vue 2 相同，Vue 3 在重新渲染组件时会生成新的虚拟DOM树，并将其与旧的虚拟DOM树进行比较。
-2标记静态节点：Vue 3 通过静态标记（Static Marking）技术，将那些不会发生变化的节点标记为静态节点，以减少对它们的Diff计算。
-3Patch 过程：在 Diff 过程中，Vue 3 采用了 Patch 策略来处理不同类型的节点：
-○对静态节点，Vue 3 将跳过其子节点的Diff过程，省略一些无谓的计算；
-○对动态节点，即有可能发生变化的节点，Vue 3 采用了优化的Heuristic算法，通过比较新旧虚拟DOM节点的选择器（Selector）信息，判断是否需要进行详细的Diff比较。
-4更新实际DOM：根据Patch的结果，Vue 3 将需要更新的部分进行批量更新，使实际DOM与新的虚拟DOM树保持一致。
+1、生成新旧虚拟DOM树：与Vue 2 相同，Vue 3 在重新渲染组件时会生成新的虚拟DOM树，并将其与旧的虚拟DOM树进行比较。
+2、标记静态节点：Vue 3 通过静态标记（Static Marking）技术，将那些不会发生变化的节点标记为静态节点，以减少对它们的Diff计算。
+3、Patch 过程：在 Diff 过程中，Vue 3 采用了 Patch 策略来处理不同类型的节点：
+
+- 对静态节点，Vue 3 将跳过其子节点的Diff过程，省略一些无谓的计算；
+- 对动态节点，即有可能发生变化的节点，Vue 3 采用了优化的Heuristic算法，通过比较新旧虚拟DOM节点的选择器（Selector）信息，判断是否需要进行详细的Diff比较。
+
+4、更新实际DOM：根据Patch的结果，Vue 3 将需要更新的部分进行批量更新，使实际DOM与新的虚拟DOM树保持一致。
 
 下面，我们继续了解 Vue 是如何将两棵树的完全 DIFF 的时间复杂度从 O(n3) 降到 O(n) 的。
 
