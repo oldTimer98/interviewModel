@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="container">
+    <img src="loading.gif" data-src="pic.png">
+    <img src="loading.gif" data-src="pic.png">
+    <img src="loading.gif" data-src="pic.png">
+    <img src="loading.gif" data-src="pic.png">
+    <img src="loading.gif" data-src="pic.png">
+    <img src="loading.gif" data-src="pic.png">
+  </div>
+</body>
+<script>
+  const imgs = document.querySelectorAll("img")
+  function lazyLoad () {
+    const scrollTop = document.body.scrollTop || document.documentElement.scrollTop
+    const innerHeight = window.innerHeight || document.documentElement.clientHeight
+    for (let i = 0; i < imgs.length; i++) {
+      if (imgs[i].offsetTop < scrollTop + innerHeight) {
+        imgs[i].src = imgs[i].getAttribute('data-src')
+      }
+    }
+  }
+  window.scroll = lazyLoad()
+</script>
+
+</html>
