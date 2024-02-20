@@ -399,3 +399,122 @@ function add(a, b, c) {
 let curriedAdd = currying(add)
 console.log(curriedAdd(2)(3)(4)()) // 输出 9
 
+class AsyncQueue {
+  constructor(count) {
+    this.count = count
+    this.running = 0
+    this.queue = []
+  }
+  addTak(task) {
+    this.queue.push(task)
+    this.runTasks()
+  }
+  async runTasks() {
+    while (this.running < this.count && this.queue.length > 0) {
+      const task = this.queue.shift()
+      this.running++
+      try {
+        await task()
+      } catch (error) {
+        console.log("task error", error)
+      }
+      this.running--
+    }
+  }
+}
+
+// 事件中心
+
+class EventEmitter {
+  constructor() {
+    this.events = {}
+  }
+  // 订阅事件
+  on(eventName, callback) {
+    if (!this.events[eventName]) {
+      this.events[eventName] = []
+    }
+    this.events[eventName].push(callback)
+  }
+  // 发布事件
+  emit(eventName, ...args) {
+    const callbacks = this.events[eventName]
+    if (callbacks) {
+      callbacks.forEach(v => v(...args))
+    }
+  }
+  // 取消事件
+  off(eventName, callback) {
+    const callbacks = this.events[eventName]
+    if (callbacks) {
+      this.events[eventName] = callbacks.filter(i => i !== callback)
+    }
+  }
+  // 加入之后只执行一次
+  once(eventName, callback) {
+    const onceCallback = (...args) => {
+      callback(...args)
+      this.off(eventName, onceCallback)
+    }
+    this.on(eventName, onceCallback)
+  }
+}
+
+// 判断对象是否存在循环引用
+
+const isCycleObject = (obj, parent) => {
+  const parentArr = parent || [obj]
+  for (const i in obj) {
+    if (Object.hasOwnProperty.call(obj, i)) {
+      const el = obj[i]
+      if (typeof el === "object") {
+        let flag = false
+        parentArr.forEach(v => {
+          if (v === obj[v]) {
+            flag = true
+          }
+        })
+        if (flag) return true
+        flag = isCycleObject(obj[i], [...parentArr, obj[i]])
+        if (flag) return true
+      }
+    }
+  }
+  return false
+}
+// 使用 setTimeout 实现 setInterval
+
+function mySetInterval(fn, timeout) {
+  const timer = {
+    flag: true,
+  }
+  function interval() {
+    if (timer.flag) {
+      fn()
+      setTimeout(interval, timeout)
+    }
+  }
+  setTimeout(interval, timeout)
+  return timer
+}
+
+const myTimer = mySetInterval(() => {
+  console.log("Hello, World!");
+}, 1000);
+
+// 运行 5 秒后停止定时器
+setTimeout(() => {
+  myTimer.flag = false; // 停止定时器
+  console.log("定时器已停止");
+}, 5000);
+
+function parseUrlParams(url) {
+  const params = {};
+  const urlParams = new URLSearchParams(url);
+
+  for (const [key, value] of urlParams) {
+    params[key] = value;
+  }
+
+  return params;
+}

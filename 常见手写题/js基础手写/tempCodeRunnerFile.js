@@ -1,13 +1,23 @@
-function uniqueArray(arr) {
-  let map = {}
-  let res = []
-  for (let i = 0; i < arr.length; i++) {
-    if (!map.hasOwnProperty(arr[i])) {
-      map[arr[i]] = 1
-      res.push(arr[i])
+function mySetInterval(fn, timeout) {
+  const timer = {
+    flag: true,
+  }
+  function interval() {
+    if (timer.flag) {
+      fn()
+      setTimeout(interval, timeout)
     }
   }
-  console.log("res,map", res, map)
-  return res
+  setTimeout(interval, timeout)
+  return timer
 }
-console.log("", uniqueArray([1, 2, 3, 5, 1, 5, 9, 1, 2, 8]))
+
+const myTimer = mySetInterval(() => {
+  console.log("Hello, World!");
+}, 1000);
+
+// 运行 5 秒后停止定时器
+setTimeout(() => {
+  myTimer.flag = false; // 停止定时器
+  console.log("定时器已停止");
+}, 5000);

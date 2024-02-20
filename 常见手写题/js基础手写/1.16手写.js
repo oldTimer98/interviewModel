@@ -411,3 +411,76 @@ Array.prototype.myFilter = function (fn) {
   }
   return res
 }
+
+function debounce(fn, delay) {
+  let timer = null
+  return function (...args) {
+    const ctx = this
+
+    if (timer) {
+      clearTimeout(timer)
+      timer = null
+    }
+
+    timer = setTimeout(() => {
+      fn.apply(ctx, args)
+    }, delay)
+  }
+}
+
+function throttle(fn, delay) {
+  let timer = null
+  return function (...args) {
+    const ctx = this
+    if (!timer) {
+      timer = setTimeout(() => {
+        fn.apply(ctx, args)
+        timer = null
+      }, delay)
+    }
+  }
+}
+
+function throttle(fn, delay) {
+  let curTime = Date.now()
+  return function (...args) {
+    const noTime = Date.now()
+    const ctx = this
+    if (delay <= noTime - curTime) {
+      curTime = Date.now()
+      return fn.apply(ctx, args)
+    }
+  }
+}
+
+Function.prototype.myCall = function (ctx, ...args) {
+  if (typeof this !== "function") return
+  ctx = ctx || this
+  const fn = Symbol()
+  ctx[fn] = this
+  const res = ctx[fn](...args)
+  delete ctx[fn]
+  return res
+}
+Function.prototype.myApply = function (ctx, args) {
+  if (typeof this !== "function") return
+  ctx = ctx || this
+  const fn = Symbol()
+  ctx[fn] = this
+  const res = ctx[fn](...args)
+  delete ctx[fn]
+  return res
+}
+Function.prototype.myBind = function (ctx, args1) {
+  if (typeof this !== "function") return
+  const fn = this
+  return function (...args2) {
+    const allArgs = [...args1, ...args2]
+    if (new.target) {
+      // this instanceof fn
+      return new fn(...allArgs)
+    } else {
+      return fn.apply(ctx, allArgs)
+    }
+  }
+}
