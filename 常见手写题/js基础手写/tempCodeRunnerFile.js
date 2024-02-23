@@ -1,12 +1,15 @@
-Array.prototype.MyReduce = function (callback, params) {
-  const arr = this
-  for (let i = 0; i < arr.length; i++) {
-    params = callback.apply(this, [params ? params : 0, arr[i], i, arr])
+function insertionSort(arr) {
+  let len = arr.length
+  for (let i = 0; i < len; i++) {
+    let key = arr[i]
+    let j = i - 1
+    while (j >= 0 && arr[j] > key) {
+      arr[j + 1] = arr[j]
+      j = j - 1
+    }
+    arr[j + 1] = key
   }
-  return params
+  return arr
 }
-console.log(
-  [1, 1, 2, 2, 3, 5, 4, 4].MyReduce((pre, cur, index, arr) => {
-    return (pre += cur)
-  })
-)
+var arr3 = [64, 34, 25, 12, 22, 11, 90];
+console.log(insertionSort(arr3));

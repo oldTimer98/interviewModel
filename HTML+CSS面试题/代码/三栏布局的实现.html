@@ -7,7 +7,7 @@
   <title>Document</title>
 </head>
 <!--
-  三栏布局的实现
+      三栏布局的实现
       1、利用浮动，左设置左浮动，右设置右浮动，中间一栏放在最后并设置margin值
       2、利用绝对定位，左固定，中间设置margin，右设置right：0
       3、flex布局，左右两边固定，中间设置flex：1
@@ -16,28 +16,92 @@
 -->
 
 <body>
-  <div class="foo">
+  <!-- 1、利用浮动，左设置左浮动，右设置右浮动，中间一栏放在最后并设置margin值 -->
+  <!-- <div class="container">
+    <div class="left common-height"></div>
+    <div class="right common-height"></div>
+    <div class="center common-height"></div>
+  </div> -->
+  <!-- 2、3、利用绝对定位，左固定，中间设置margin，右设置right：0 、或者设置width:calc(100% - 100px) -->
+  <!-- <div class="container">
+    <div class="left common-height"></div>
+    <div class="center common-height"></div>
+    <div class="right common-height"></div>
+  </div> -->
+  <!-- 4、flex布局 -->
+  <!-- <div class="container">
+    <div class="left common-height"></div>
+    <div class="center common-height"></div>
+    <div class="right common-height"></div>
+  </div> -->
+  <!-- 5、圣杯布局或者双飞翼布局-->
+  <div class="container">
+    <div class="center">
+      <div class="ineer">content</div>
+    </div>
     <div class="left"></div>
     <div class="right"></div>
   </div>
 </body>
 <style>
-  .foo {
-    position: relative;
+  /* .container {
     height: 100px;
+    padding: 0 100px;
   }
 
   .left {
-    position: absolute;
-    width: 200px;
+    position: relative;
+    left: -100px;
+    float: left;
+    margin-left: -100%;
+    width: 100px;
     height: 100px;
-    background: tomato;
+    background-color: red;
+  }
+
+  .center {
+    float: left;
+    width: 100%;
+    height: 100px;
+    background-color: gray;
   }
 
   .right {
-    margin-left: 200px;
+    position: relative;
+    left: 200px;
+    margin-left: -200px;
+    float: left;
+    width: 100px;
     height: 100px;
-    background: gold;
+    background-color: green;
+  } */
+
+  .left,
+  .right {
+    width: 200px;
+    height: 200px;
+    background: pink;
+    float: left;
+  }
+
+  .center {
+    height: 200px;
+    background: rgb(45, 173, 75);
+    float: left;
+    width: 100%;
+  }
+
+  .ineer {
+    margin: 0 200px;
+    height: 200px;
+  }
+
+  .left {
+    margin-left: -100%;
+  }
+
+  .right {
+    margin-left: -200px;
   }
 </style>
 
