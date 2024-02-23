@@ -37,14 +37,8 @@ console.log(
 )
 Array.prototype.MyReduce = function (callback, params) {
   const arr = this
-  let current = params
   for (let i = 0; i < arr.length; i++) {
-    current = !current && arr[0]
-    if (i === 0) {
-      params = callback.apply(this, [current, arr[i + 1], i + 1, arr])
-    } else {
-      params = callback.apply(this, [params, arr[i], i, arr])
-    }
+    params = callback.apply(this, [params ? params : 0, arr[i], i, arr])
   }
   return params
 }

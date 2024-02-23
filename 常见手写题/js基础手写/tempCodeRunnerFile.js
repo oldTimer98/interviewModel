@@ -1,23 +1,12 @@
-function mySetInterval(fn, timeout) {
-  const timer = {
-    flag: true,
+Array.prototype.MyReduce = function (callback, params) {
+  const arr = this
+  for (let i = 0; i < arr.length; i++) {
+    params = callback.apply(this, [params ? params : 0, arr[i], i, arr])
   }
-  function interval() {
-    if (timer.flag) {
-      fn()
-      setTimeout(interval, timeout)
-    }
-  }
-  setTimeout(interval, timeout)
-  return timer
+  return params
 }
-
-const myTimer = mySetInterval(() => {
-  console.log("Hello, World!");
-}, 1000);
-
-// 运行 5 秒后停止定时器
-setTimeout(() => {
-  myTimer.flag = false; // 停止定时器
-  console.log("定时器已停止");
-}, 5000);
+console.log(
+  [1, 1, 2, 2, 3, 5, 4, 4].MyReduce((pre, cur, index, arr) => {
+    return (pre += cur)
+  })
+)

@@ -689,18 +689,15 @@ display:-webkit-box;         // 作为弹性伸缩盒子模型显示。
 - **给父级div定义** **height属性**
 - **最后一个浮动元素之后添加一个空的div标签，并添加** **clear:both样式**
 - **包含浮动元素的父级标签添加** **overflow:hidden或者** **overflow:auto**
-- **使用 :after 伪元素。由于IE6-7不支持 :after，使用 zoom:1 触发 hasLayout**
+- **使用 :after 伪元素。**
 
 ```css
-.clearfix:after{
-    content: "\200B";
-    display: table;
-    height: 0;
-    clear: both;
-  }
-  .clearfix{
-    *zoom: 1;
-  }
+// 在style标签内加上
+.clear::after{
+      content: '';
+      clear: both;
+      display: block;
+}
 ```
 
 ## 22. 对BFC的理解，如何创建BFC
