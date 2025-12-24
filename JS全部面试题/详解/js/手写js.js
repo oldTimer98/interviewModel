@@ -3,7 +3,7 @@ function Person(name) {
   this.name = name
 }
 Person.prototype.getName = function () {
-  console.log("this.name", this.name)
+  console.log('this.name', this.name)
 }
 
 function Child(name, age) {
@@ -15,10 +15,10 @@ Child.prototype = Object.create(Person.prototype)
 Child.prototype.constructor = Child
 
 Child.prototype.getAge = function () {
-  console.log("this.age", this.age)
+  console.log('this.age', this.age)
 }
 
-const child1 = new Child("Tom", 18)
+const child1 = new Child('Tom', 18)
 child1.getAge()
 child1.getName()
 // 2、instanceof的原理
@@ -38,11 +38,11 @@ function myInstanceof(left, right) {
 
 function myNew(...args) {
   const constructor = [...arguments][0]
-  if (typeof constructor !== "function") return
+  if (typeof constructor !== 'function') return
   const obj = {}
   obj.prototype = constructor.prototype
   const res = constructor.apply(this, [...arguments].slice(1))
-  if (res && (typeof res === "object" || typeof res === "function")) return res
+  if (res && (typeof res === 'object' || typeof res === 'function')) return res
   return obj
 }
 
@@ -73,9 +73,9 @@ function add(a) {
 
 const added = new memorize(add)
 
-console.log("added(", added(1))
-console.log("added(", added(2))
-console.log("added(", added(3))
+console.log('added(', added(1))
+console.log('added(', added(2))
+console.log('added(', added(3))
 
 function throttle(fn, wait) {
   let curTime = Date.now()
@@ -114,3 +114,21 @@ function debounce(fn, wait) {
   }
 }
 
+// 32. 对AJAX的理解，实现一个AJAX请求
+const url = 'www.xxx.com'
+const xhr = new XhrRequest()
+xhr.open(get, url, true)
+xhr.onReadyStateChange = function () {
+  if (xhr.readyState !== 4) return
+  if (xhr.status === 200) {
+    handle(xhr.response)
+  } else {
+    console.error(xhr.statusText)
+  }
+}
+xhr.onerror = function () {
+  console.error(xhr.statusText)
+}
+xhr.responseType = 'json'
+xhr.setRequestHeader('Accept', 'application/json')
+xhr.send(null)
