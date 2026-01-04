@@ -1494,6 +1494,8 @@ vue的组件加载和渲染顺序
 
 - **能更快获取到服务端数据，减少页面加载时间，用户体验更好；**
 - **SSR不支持 beforeMount 、mounted 钩子函数，放在 created 中有助于一致性。**
+越早请求，用户体验越好（减少白屏时间），只要不依赖 DOM，就不要等到 mounted！
+
 
 **keep-alive是 Vue 提供的一个内置组件，用来对组件进行缓存——在组件切换过程中将状态保留在内存中，防止重复渲染DOM。**
 
@@ -1584,7 +1586,12 @@ const router = new Router({
  ]
 }))
 ```
-
+利用 Webpack 的 prefetch / preload 提升后续页面加载速度
+```js
+// 预加载（空闲时加载）
+component: () => import(/* webpackPrefetch: true */ '@/views/Profile.vue')
+```
+路由懒加载可以提升首屏性能
 ## 41.路由的hash和history模式的区别
 
 https://juejin.cn/post/7116336664540086286
