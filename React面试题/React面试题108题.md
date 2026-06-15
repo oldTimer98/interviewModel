@@ -2684,6 +2684,10 @@ React Hooks 的限制主要有两条：
 
 这些限制会在编码上造成一定程度的心智负担，新手可能会写错，为了避免这样的情况，可以引入 ESLint 的 Hooks 检查插件进行预防。
 
+**为什么必须固定顺序，常见替代方案为何不可行？**
+
+React 并不靠变量名识别 Hook，而是把每次 `useState()` 视为「第 N 个 state 变量」，重渲染时按**相同调用顺序**从链表中取回对应状态。若用「把所有 state 放进一个对象」替代多次 `useState`，会丧失从组件中抽取 custom hook 的能力；若给 `useState` 传 string/Symbol key，会在 custom hook 复用时产生**命名冲突**（同一 hook 调用两次如 `useFormInput()` 会共用同一 key），多层 custom hook 还会出现 mixin 式的**钻石继承冲突**。闭包/工厂函数等补救方案则繁琐、破坏 copy-paste 复用，且仍难支持 Hook 之间传值（如 `useFriendStatus(recipientID)`）。因此固定顺序是支持 custom hook、多次调用同一 hook、Hook 间传值的最简方案。
+
 #### 5. useEffect 与 useLayoutEffect 的区别
 
 **（1）共同点**
@@ -2697,6 +2701,10 @@ React Hooks 的限制主要有两条：
 - **使用效果：** useEffect是按照顺序执行代码的，改变屏幕像素之后执行（先渲染，后改变DOM），当改变屏幕内容时可能会产生闪烁；useLayoutEffect是改变屏幕像素之前就执行了（会推迟页面显示的事件，先改变DOM后渲染），不会产生闪烁。**useLayoutEffect总是比useEffect先执行。**
 
 在未来的趋势上，两个 API 是会长期共存的，暂时没有删减合并的计划，需要开发者根据场景去自行选择。React 团队的建议非常实用，如果实在分不清，先用 useEffect，一般问题不大；如果页面有异常，再直接替换为 useLayoutEffect 即可。
+
+**useInsertionEffect 与 commit 阶段执行顺序（React 18+）**
+
+三者均挂载在 Fiber 的 Effect 链表上，在 **commit 阶段**按固定顺序触发：`useInsertionEffect`（DOM 变更**前**，专供 CSS-in-JS 库注入样式）→ `commitMutationEffects` 将 VDOM 副作用应用到真实 DOM → `useLayoutEffect`（DOM 已更新、浏览器绘制**前**，同步读写布局）→ 浏览器完成绘制后，异步 `flushPassiveEffects` 执行 `useEffect` 的销毁与回调。记忆口诀：**Insertion 最先（CSS），Layout 同步（DOM），Effect 最后（异步）**。父子组件同用 `useEffect` 时，子组件回调先于父组件执行。
 
 #### 6. React Hooks在平时开发中需要注意的问题和原因
 
@@ -3039,6 +3047,22 @@ hooks很好的解决了上述问题，hooks提供了很多方法
 - 可检测冲突的样式规则并记录警告
 - 废弃 unstable_createPortal，使用CreatePortal
 - 将组件堆栈添加到其开发警告中，使开发人员能够隔离bug并调试其程序，这可以清楚地说明问题所在，并更快地定位和修复错误。
+
+**（4）React 17**
+
+- **新 JSX 转换**：编译后自动注入 `jsx()`，组件文件无需 `import React`
+- **事件委托调整**：合成事件不再绑定 `document`，改为绑定渲染根容器，更好兼容 Web Components 等嵌套 React 树场景
+- **渐进升级**：支持多版本 React 共存，便于微前端逐步迁移
+- **StrictMode 增强**：移除对 `UNSAFE_` 生命周期的静默支持，开发态警告更明确
+
+**（5）React 18**
+
+- **并发渲染（Concurrent Rendering）**：Fiber 任务可中断、按优先级调度，提升交互响应性
+- **自动批处理（Automatic Batching）**：`setTimeout`、Promise、原生事件中的多次 setState 也会合并为一次渲染
+- **新 Root API**：`createRoot` 替代 `ReactDOM.render` 以启用并发特性
+- **Suspense 增强**：支持 SSR 流式渲染；配合 `lazy` 做细粒度加载
+- **新增 API**：`useId`（生成稳定唯一 ID）、`startTransition` / `useTransition`（标记低优先级过渡更新）、`useDeferredValue`
+- **React Server Components**（实验性）：服务端组件减轻客户端 bundle 体积
 
 #### 3. react 实现一个全局的 dialog
 
@@ -3850,45 +3874,6 @@ export default withWindowWidth(MyComponent);
 4. **统一事件池**（React 16）：复用事件对象减少 GC 压力（React 17 已移除事件池）
 
 
-#### 24.react-redux 中 connect 函数的实现原理是什么
-
-react-redux 中的 connect 函数接近观察者模式，它利用 React 的上下文机制，直接订阅了 Redux store 的状态变化来实现组件的状态刚更新。
-connect 函数的实现原理可以概括为：
-
-创建一个容器组件，用于与 Redux store 进行交互、订阅状态变化和分发操作。
-
-- 在容器组件内部，使用 `mapStateToProps` 将 Redux store 中的状态映射到组件的 props 上。
-- 在容器组件内部，使用 `mapDispatchToProps` 将 Redux 中的操作映射到组件的 props 上。
-- 订阅 Redux store 的状态变化，以便在状态变化时重新渲染容器组件。
-- 将经过处理后的状态和操作传递给被包装的 React 组件，以供其使用。
-
-这个实现原理是一个高度简化的描述，react-redux 内部的实际实现更为复杂，因为它需要处理许多边缘情况和性能优化，以确保 React 应用的状态管理能够高效运行。
-
-#### 25.useEffect、useLayoutEffect、useInsertionEffect 之间的区别
-
-**记忆口诀：「Insertion 最先（CSS），Layout 同步（DOM量），Effect 最后（异步）」**
-
-| Hook | 执行时机 | 是否阻塞渲染 | 适用场景 |
-| --- | --- | :---: | --- |
-| `useInsertionEffect` | DOM 变更前 | ✅ | CSS-in-JS 库注入样式（React 18+） |
-| `useLayoutEffect` | DOM 变更后、浏览器绘制前 | ✅ | 需要同步读取/修改 DOM（如测量尺寸） |
-| `useEffect` | 浏览器绘制后 | ❌ | 数据请求、订阅、定时器等副作用 |
-
-> 绝大多数场景用 `useEffect` 就够了，只有需要避免"闪烁"时才用 `useLayoutEffect`。
-
-#### 26.为什么顺序调用对 React Hooks 很重要？
-
-**一句话：** React 用**链表**按调用顺序存储每个 Hook 的状态，如果顺序变了，Hook 和状态就对不上了。
-
-**详细原因：**
-
-1. React 内部用一个**单链表**来存储组件的所有 Hook（useState、useEffect 等）
-2. 每次渲染时，React 按**调用顺序**依次从链表中取出对应的状态
-3. 如果在条件语句或循环中调用 Hook，可能导致某次渲染的调用顺序与上次不同，状态就会**错位**
-
-**所以：** Hook 只能在函数组件的**最顶层**调用，不能放在 if/for/嵌套函数中。ESLint 插件 `eslint-plugin-react-hooks` 可以自动检查。
-
-
 #### 27.React 元素中 $$typeof 的作用
 
 **一句话：** `$$typeof` 是 React 元素的**身份标识**，用 `Symbol` 实现，主要为了**防止 XSS 攻击**。
@@ -3899,38 +3884,34 @@ connect 函数的实现原理可以概括为：
 2. 当渲染时，React 会检查 `$$typeof` 是否为合法的 Symbol 值
 3. 因为 JSON 中无法包含 Symbol 类型，所以即使攻击者通过注入 JSON 数据伪造了一个"React 元素"对象，也无法伪造 `$$typeof`，从而防止了恶意代码被渲染
 
-
-#### 28.详细说说 react 生命周期
-
-> 本题详细版见上文「三、生命周期」第1题，此处给出速记表。
-
-**记忆口诀：「挂载四步：构→派→渲→挂；更新三步：派→渲→更；卸载一步：即将卸载」**
-
-| 阶段 | React 16.4+ 钩子 | 常用操作 |
-| --- | --- | --- |
-| **挂载** | `constructor` → `getDerivedStateFromProps` → `render` → `componentDidMount` | 初始化 state、发请求、订阅 |
-| **更新** | `getDerivedStateFromProps` → `shouldComponentUpdate` → `render` → `getSnapshotBeforeUpdate` → `componentDidUpdate` | 条件更新、对比 prevProps |
-| **卸载** | `componentWillUnmount` | 清定时器、取消订阅 |
-
-> 已废弃（React 16.3+）：`componentWillMount`、`componentWillReceiveProps`、`componentWillUpdate`（加 `UNSAFE_` 前缀仍可用但不推荐）
+4. 若服务端允许用户存储任意 JSON，攻击者可能构造 `{ type: 'div', props: { dangerouslySetInnerHTML: ... } }` 冒充 React 元素；React 0.14+ 通过校验 `$$typeof === Symbol.for('react.element')` 拒绝非法对象。不支持 Symbol 的旧环境会回退为 `0xeac7` 数字标识。
 
 #### 29.React如何拆分组件？原则是什么？
 
-**拆分四原则：**
+**拆分七原则：**
 
-1. **单一职责（SRP）**：一个组件只做一件事，如果一个组件承担了太多逻辑，就该拆分
-2. **容器/展示分离**：容器组件负责数据和逻辑（怎么工作），展示组件只负责 UI（长什么样）
-3. **可复用性**：如果一段 UI 在多处使用，提取为公共组件
-4. **按功能/路由拆分**：每个页面、每个独立功能块可以作为一个组件模块
+1. **单一职责（SRP）**：一个组件只负责一个功能；过于庞大时拆成多个职责明确的小组件
+2. **可复用性**：通用 UI 与逻辑封装为独立组件，通过 props 传参，避免硬编码数据
+3. **单一抽象层次**：同一组件内不混合高层业务逻辑与底层 UI 渲染
+4. **分离关注点**：展示组件（Presentational）只管 UI，容器组件（Container）管状态与业务逻辑
+5. **高内聚低耦合**：组件内部功能集中，组件间通过 props/回调通信，减少直接依赖
+6. **可测试性**：小组件职责清晰，便于单元测试与集成测试
+7. **命名与文档**：组件、props、方法命名语义化，必要时补充注释说明用途
 
-**实际操作判断：** 当你发现一个组件的 render 方法超过 100 行，或者 props 超过 10 个，就该考虑拆分了。
+**实际操作判断：** render 超过 100 行或 props 超过 10 个时，优先考虑拆分。
 
-#### 30.在 react 中我们为什么不能直接更新状态
+#### 31. React 中常见的内存泄漏原因及防范？
 
-**面试速答：** 直接修改 `this.state` 不会触发重新渲染，因为 React 无法感知到状态变化。
+**常见原因：**
 
-**三个原因：**
+1. **未清理的定时器与事件监听**：`componentDidMount` / `useEffect` 中订阅了事件或创建了 `setInterval`，卸载时未在 `componentWillUnmount` / effect cleanup 中移除
+2. **未取消的异步请求**：组件卸载后异步回调仍 `setState`，或闭包持有已卸载组件引用
+3. **闭包/引用未释放**：父组件或全局变量长期持有子组件实例（ref、模块级变量）
+4. **大量渲染缓存未清理**：计算结果、Map/Set 缓存随渲染累积且从不释放
 
-1. **不会触发 re-render**：React 通过 `setState` / `useState` 的 setter 来调度更新，直接改 state 绕过了这个机制
-2. **破坏不可变性原则**：React 通过浅比较（`Object.is`）来判断是否需要更新，直接修改引用类型的 state 不会改变引用地址，导致 diff 失效
-3. **破坏批量更新**：`setState` 会被合并为一次更新，直接修改 state 无法享受批量更新带来的性能优化
+**防范措施：**
+
+- 所有副作用必须返回 cleanup 函数（`useEffect` 的 return、类组件的 `componentWillUnmount`）
+- 异步操作中使用 `AbortController` 或 mounted 标志位，卸载后不再更新状态
+- 避免在已卸载组件上调用 `setState`；React 18 严格模式下会双重挂载，更需规范 cleanup
+- 用 Chrome DevTools Memory 面板或 React Profiler 定期排查异常堆增长
