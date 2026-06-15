@@ -3842,8 +3842,12 @@ export default withWindowWidth(MyComponent);
 
 #### 23.react为什么需要合成事件
 
+**面试速答：** React 合成事件是对原生事件的跨浏览器封装，核心原因有四个：
 
-
+1. **跨浏览器兼容**：统一不同浏览器的事件 API 差异
+2. **性能优化**：通过事件委托，将所有事件统一绑定在根节点（React 17+ 是 root 容器），而非每个 DOM 元素
+3. **与 Fiber 架构协同**：合成事件配合批量更新机制，在同一事件回调中多次 setState 只会触发一次重渲染
+4. **统一事件池**（React 16）：复用事件对象减少 GC 压力（React 17 已移除事件池）
 
 
 #### 24.react-redux 中 connect 函数的实现原理是什么
@@ -3862,26 +3866,71 @@ connect 函数的实现原理可以概括为：
 
 #### 25.useEffect、useLayoutEffect、useInsertionEffect 之间的区别
 
+**记忆口诀：「Insertion 最先（CSS），Layout 同步（DOM量），Effect 最后（异步）」**
 
+| Hook | 执行时机 | 是否阻塞渲染 | 适用场景 |
+| --- | --- | :---: | --- |
+| `useInsertionEffect` | DOM 变更前 | ✅ | CSS-in-JS 库注入样式（React 18+） |
+| `useLayoutEffect` | DOM 变更后、浏览器绘制前 | ✅ | 需要同步读取/修改 DOM（如测量尺寸） |
+| `useEffect` | 浏览器绘制后 | ❌ | 数据请求、订阅、定时器等副作用 |
+
+> 绝大多数场景用 `useEffect` 就够了，只有需要避免"闪烁"时才用 `useLayoutEffect`。
 
 #### 26.为什么顺序调用对 React Hooks 很重要？
 
+**一句话：** React 用**链表**按调用顺序存储每个 Hook 的状态，如果顺序变了，Hook 和状态就对不上了。
 
+**详细原因：**
 
+1. React 内部用一个**单链表**来存储组件的所有 Hook（useState、useEffect 等）
+2. 每次渲染时，React 按**调用顺序**依次从链表中取出对应的状态
+3. 如果在条件语句或循环中调用 Hook，可能导致某次渲染的调用顺序与上次不同，状态就会**错位**
+
+**所以：** Hook 只能在函数组件的**最顶层**调用，不能放在 if/for/嵌套函数中。ESLint 插件 `eslint-plugin-react-hooks` 可以自动检查。
 
 
 #### 27.React 元素中 $$typeof 的作用
 
+**一句话：** `$$typeof` 是 React 元素的**身份标识**，用 `Symbol` 实现，主要为了**防止 XSS 攻击**。
 
+**原理：**
 
+1. 每个 React 元素对象都有一个 `$$typeof: Symbol.for('react.element')` 属性
+2. 当渲染时，React 会检查 `$$typeof` 是否为合法的 Symbol 值
+3. 因为 JSON 中无法包含 Symbol 类型，所以即使攻击者通过注入 JSON 数据伪造了一个"React 元素"对象，也无法伪造 `$$typeof`，从而防止了恶意代码被渲染
 
 
 #### 28.详细说说 react 生命周期
 
+> 本题详细版见上文「三、生命周期」第1题，此处给出速记表。
 
+**记忆口诀：「挂载四步：构→派→渲→挂；更新三步：派→渲→更；卸载一步：即将卸载」**
+
+| 阶段 | React 16.4+ 钩子 | 常用操作 |
+| --- | --- | --- |
+| **挂载** | `constructor` → `getDerivedStateFromProps` → `render` → `componentDidMount` | 初始化 state、发请求、订阅 |
+| **更新** | `getDerivedStateFromProps` → `shouldComponentUpdate` → `render` → `getSnapshotBeforeUpdate` → `componentDidUpdate` | 条件更新、对比 prevProps |
+| **卸载** | `componentWillUnmount` | 清定时器、取消订阅 |
+
+> 已废弃（React 16.3+）：`componentWillMount`、`componentWillReceiveProps`、`componentWillUpdate`（加 `UNSAFE_` 前缀仍可用但不推荐）
 
 #### 29.React如何拆分组件？原则是什么？
 
+**拆分四原则：**
 
+1. **单一职责（SRP）**：一个组件只做一件事，如果一个组件承担了太多逻辑，就该拆分
+2. **容器/展示分离**：容器组件负责数据和逻辑（怎么工作），展示组件只负责 UI（长什么样）
+3. **可复用性**：如果一段 UI 在多处使用，提取为公共组件
+4. **按功能/路由拆分**：每个页面、每个独立功能块可以作为一个组件模块
+
+**实际操作判断：** 当你发现一个组件的 render 方法超过 100 行，或者 props 超过 10 个，就该考虑拆分了。
 
 #### 30.在 react 中我们为什么不能直接更新状态
+
+**面试速答：** 直接修改 `this.state` 不会触发重新渲染，因为 React 无法感知到状态变化。
+
+**三个原因：**
+
+1. **不会触发 re-render**：React 通过 `setState` / `useState` 的 setter 来调度更新，直接改 state 绕过了这个机制
+2. **破坏不可变性原则**：React 通过浅比较（`Object.is`）来判断是否需要更新，直接修改引用类型的 state 不会改变引用地址，导致 diff 失效
+3. **破坏批量更新**：`setState` 会被合并为一次更新，直接修改 state 无法享受批量更新带来的性能优化
